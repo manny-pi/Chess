@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Laura and Alan Projects/.idea/Laura and Alan Projects.iml" filepath="$PROJECT_DIR$/../Laura and Alan Projects/.idea/Laura and Alan Projects.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Lecture Code/.idea/Lecture Code.iml" filepath="$PROJECT_DIR$/../Lecture Code/.idea/Lecture Code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Personal Projects/.idea/Personal Projects.iml" filepath="$PROJECT_DIR$/../Personal Projects/.idea/Personal Projects.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PyGame Projects.iml" filepath="$PROJECT_DIR$/.idea/PyGame Projects.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Scrap/.idea/Random Code.iml" filepath="$PROJECT_DIR$/../Scrap/.idea/Random Code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Random Projects/.idea/Random Projects.iml" filepath="$PROJECT_DIR$/../Random Projects/.idea/Random Projects.iml" />
+    </modules>
+  </component>
+</project>
