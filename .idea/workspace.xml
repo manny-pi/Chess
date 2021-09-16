@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="652f84c5-e344-4d02-b5fd-25651af6fc1b" name="Default Changelist" comment="Attempt #1: Committing PyGame Files" />
+    <list default="true" id="652f84c5-e344-4d02-b5fd-25651af6fc1b" name="Default Changelist" comment="Attempt #1: Committing PyGame Files">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,7 +38,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -44,7 +46,7 @@
       <recent name="$PROJECT_DIR$/../Personal Projects/GUI Projects/timekeeper/" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Trash">
+  <component name="RunManager" selected="Python.Scramble">
     <configuration name="Rock_paper_scissors" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Random Projects" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -173,9 +175,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Scramble" />
         <item itemvalue="Python.Trash" />
         <item itemvalue="Python.ShooterGUI" />
-        <item itemvalue="Python.Scramble" />
         <item itemvalue="Python.Tic Tac Toe" />
         <item itemvalue="Python.Rock_paper_scissors" />
       </list>
@@ -197,7 +199,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631676821375</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Attempt #1: Committing PyGame Files">
+      <created>1631729734057</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1631729734057</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
