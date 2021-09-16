@@ -2,8 +2,14 @@ import pygame
 
 class PlayerSprite(pygame.sprite.Sprite):
     def __init__(self, surf_w, surf_h, init_x=0, init_y=0, speed=5, img=None):
+        
+        # Call the Constructor of the parent class 
         super(PlayerSprite, self).__init__()
+        
+        # Set the dimensions of the surface that we'll draw shapes and images to
         self.surface = pygame.Surface((surf_w, surf_h))
+        
+        # Get the rectangular area which images are drawn to 
         self.rect = self.surface.get_rect(topleft=(init_x, init_y))
 
         # Set the sprite speed
