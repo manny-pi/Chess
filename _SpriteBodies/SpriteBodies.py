@@ -1,5 +1,8 @@
 import pygame
 
+""" This module contains basic sprite bodies.  It allows you to add images to your sprites, and set the speed at which your sprite will move
+"""
+
 class PlayerSprite(pygame.sprite.Sprite):
     def __init__(self, surf_w, surf_h, init_x=0, init_y=0, speed=5, img=None):
         
@@ -17,7 +20,7 @@ class PlayerSprite(pygame.sprite.Sprite):
 
         # Set the sprite graphic
         if img is not None:
-            self.surface = img.convert()
+            self.surface = pygame.transform.scale(img.convert(), (20, 20)) 
         else:
             self.surface.fill((255, 255, 255))
 
@@ -39,9 +42,22 @@ class EnemySprite(pygame.sprite.Sprite):
 
 
 class OtherSprite(pygame.sprite.Sprite):
-    def __init__(self, init_x=0, init_y=0, speed=10):
+    def __init__(self, init_x=0, init_y=0, speed=10, img=None):
         super(OtherSprite, self).__init__()
-        self.surface = pygame.Surface((30, 10  ))
-        self.surface.fill((255, 215, 0))
+        
+        self.surface = pygame.Surface((30, 10))
         self.rect = self.surface.get_rect(topleft=(init_x, init_y))
+        
+        # Set the sprite speed
         self.speed = speed
+
+        # Set the sprite graphic
+        if img is not None: 
+          # Use the convert method to speed up blitting
+          self.surface = img.convert()  
+
+        # Set the surface color as gold 
+        else: 
+          self.surface.fill((255, 215, 0))
+
+        

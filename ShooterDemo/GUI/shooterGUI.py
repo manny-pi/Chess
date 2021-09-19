@@ -4,11 +4,6 @@ from pygame.locals import *
 import random
 
 
-# Shooter Game:
-# 1 player; 1 enemy
-# Player can shoot; Enemy can shoot back
-# Player has a life span of 10; Enemy has a life span of 10
-
 class Shooter(spritebody.PlayerSprite):
     def __init__(self, surf_w, surf_h, init_x=0, init_y=0, speed=5):
         super().__init__(surf_w, surf_h, init_x, init_y, speed)
@@ -50,9 +45,11 @@ class Enemy(spritebody.EnemySprite):
 
 class Bullet(spritebody.OtherSprite):
     SPEED = 10
+    BULLET_IMAGE = pygame.image.load("./ShooterDemo/GUI/bullet.png")
+    BULLET_IMAGE = pygame.transform.scale(BULLET_IMAGE, (20, 10))
 
     def __init__(self, init_x=0, init_y=0):
-        super().__init__(init_x, init_y, speed=Bullet.SPEED)
+        super().__init__(init_x, init_y, speed=Bullet.SPEED, img=Bullet.BULLET_IMAGE)
 
     def update(self):
         self.rect.move_ip(self.speed, 0)
@@ -69,31 +66,29 @@ class ShooterGUI:
     # Initialize the 'pygame' module
     pygame.init()
 
-    # GAME INVARIABLES
+    # GAME WINDOW INVARIABLES
     # - - - - - - - - - - - - - -
     WINDOW_WIDTH = 800
     WINDOW_HEIGHT = 400
-    WINDOW_BACKGROUND = pygame.image.load("bg.png")
-
+    WINDOW_BACKGROUND = pygame.image.load("./ShooterDemo/GUI/bg.png")
+    
     # PLAYER VARIABLES
     # - - - - - - - - - - - - - -
     PLAYER_SCORE = 0
-
-    # - - - - - - - - - - - - - -
 
     def __init__(self):
         self.game_window = pygame.display.set_mode((800, 400),
                                                    display=0)
 
-        # Create the player
+        # Create the player; the player img is generated at position (30, 400)
         p_initial_x = 30
-        p_initial_y = int(ShooterGUI.WINDOW_HEIGHT / 2)
-        self.player = Shooter(surf_w=10, surf_h=10, init_x=p_initial_x,
+        p_initial_y = ShooterGUI.WINDOW_HEIGHT / 2
+        self.player = Shooter(surf_w=10, surf_h=20, init_x=p_initial_x,
                               init_y=p_initial_y, speed=8)
 
         # Create the enemy
         e_initial_x = 770
-        e_initial_y = int(ShooterGUI.WINDOW_HEIGHT / 2)
+        e_initial_y = ShooterGUI.WINDOW_HEIGHT / 2
         self.enemy = Enemy(init_x=e_initial_x, init_y=e_initial_y, speed=9)
 
         # Sprite Groups
@@ -146,6 +141,7 @@ class ShooterGUI:
             # Draw sprites on 'game_window'
             for bullet in self.bullets:
                 bullet.update()
+          
                 self.game_window.blit(bullet.surface, bullet.rect)
 
             # Update the score

@@ -1,0 +1,36 @@
+{
+  "files": {
+    "ShooterDemo/GUI/File.py": [
+      {
+        "id": "4d0dc3e7-67f8-4fde-a82f-9c038a5150bb",
+        "line": 1,
+        "version": 34,
+        "index": 0
+      }
+    ],
+    "_SpriteBodies/SpriteBodies.py": [
+      {
+        "id": "5523d800-2168-43f6-af4b-5eaf0387653e",
+        "line": 17,
+        "version": 690,
+        "index": 673
+      }
+    ],
+    "main.py": [
+      {
+        "id": "d346a936-0cfb-421b-8766-a52507baf612",
+        "line": 5,
+        "version": 538,
+        "index": 76
+      }
+    ],
+    "main.replit": [
+      {
+        "id": "329c57de-7e3c-43b1-8be9-b334739e2210",
+        "line": 1,
+        "version": 8,
+        "index": 0
+      }
+    ]
+  }
+}
