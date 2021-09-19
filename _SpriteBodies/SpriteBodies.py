@@ -20,7 +20,7 @@ class PlayerSprite(pygame.sprite.Sprite):
 
         # Set the sprite graphic
         if img is not None:
-            self.surface = pygame.transform.scale(img.convert(), (20, 20)) 
+            self.surface = img.convert() 
         else:
             self.surface.fill((255, 255, 255))
 

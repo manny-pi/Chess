@@ -5,8 +5,11 @@ import random
 
 
 class Shooter(spritebody.PlayerSprite):
+    SHOOTER_IMAGE = pygame.image.load("./ShooterDemo/GUI/shooter.png")
+    SHOOTER_IMAGE = pygame.transform.scale(SHOOTER_IMAGE, (60, 60))
+
     def __init__(self, surf_w, surf_h, init_x=0, init_y=0, speed=5):
-        super().__init__(surf_w, surf_h, init_x, init_y, speed)
+        super().__init__(surf_w, surf_h, init_x, init_y, speed, img=Shooter.SHOOTER_IMAGE) 
 
     def update(self, pressed_keys, window_width,
                window_height):
@@ -27,8 +30,11 @@ class Shooter(spritebody.PlayerSprite):
 
 
 class Enemy(spritebody.EnemySprite):
-    def __init__(self, init_x=0, init_y=0, speed=8, img=None):
-        super().__init__(init_x, init_y, speed, img)
+    ENEMY_IMAGE = pygame.image.load("./ShooterDemo/GUI/enemy.png")
+    ENEMY_IMAGE = pygame.transform.scale(ENEMY_IMAGE, (60, 20))
+
+    def __init__(self, init_x=0, init_y=0, speed=8):
+        super().__init__(init_x, init_y, speed, img=Enemy.ENEMY_IMAGE)
 
     def update(self, collisionDetected=False):
         self.rect.move_ip(-self.speed, 0)
@@ -125,8 +131,8 @@ class ShooterGUI:
                 ShooterGUI.PLAYER_SCORE += 1
                 print(ShooterGUI.PLAYER_SCORE)
 
-                # Increase the speed of 'Enemy' every 5 points
-                if ShooterGUI.PLAYER_SCORE % 5 == 0:
+                # Increase the speed of 'Enemy' every 10 points
+                if ShooterGUI.PLAYER_SCORE % 10 == 0:
                     self.enemy.speedUp()
                     Bullet.speedUp()
 
