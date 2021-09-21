@@ -1,7 +1,7 @@
 import _SpriteBodies.spritebodies as spritebody
 import pygame
 import pygame.mixer 
-from pygame.locals import *
+from pygame.locals import * 
 import random
 
 
@@ -14,16 +14,18 @@ class Shooter(spritebody.PlayerSprite):
 
     def update(self, pressed_keys, window_width,
                window_height):
-        # Move player up
+        
+        # Move Shooter up
         if pressed_keys[K_w]:
             if self.rect.top - self.speed >= 20:
                 self.rect.move_ip(0, -self.speed)
 
-        # Move player down
+        # Move Shooter down
         if pressed_keys[K_s]:
             if self.rect.bottom + self.speed <= window_height - 20:
                 self.rect.move_ip(0, self.speed)
 
+    # Create a Bullet object that initially appears at the same location as Shooter 
     def shoot(self):
         b_init_x = self.rect.left
         b_init_y = self.rect.top + 20
@@ -37,13 +39,8 @@ class Enemy(spritebody.EnemySprite):
     def __init__(self, init_x=0, init_y=0, speed=8):
         super().__init__(init_x, init_y, speed, img=Enemy.ENEMY_IMAGE)
 
-    def update(self, collisionDetected=False):
+    def update(self):
         self.rect.move_ip(-self.speed, 0)
-
-        # Reset position of enemy at other end of the screen
-        if self.rect.left <= 0 or collisionDetected:
-            self.rect.left = 800
-            self.rect.top = random.randint(50, 350)
 
     def speedUp(self):
         if self.speed < 26:
@@ -70,6 +67,7 @@ class Bullet(spritebody.OtherSprite):
 
 
 class ShooterGUI:
+
     # Initialize the 'pygame' module
     pygame.init()
 
@@ -78,7 +76,7 @@ class ShooterGUI:
 
 
     # GAME WINDOW INVARIABLES
-    # - - - - - - - - - - - - - -
+    # - - - - - - - - - - - - - - - - - -
     # GAME WINDOW 
     WINDOW_WIDTH = 800
     WINDOW_HEIGHT = 400
@@ -88,97 +86,98 @@ class ShooterGUI:
     filename = "./ShooterDemo/audio/shooteraudio.ogg"
     SHOOTER_SOUND = pygame.mixer.Sound(filename)
 
-    # PLAYER VARIABLES
-    # - - - - - - - - - - - - - -
+    # SHOOTER VARIABLES
+    # - - - - - - - - - - - - - - - - - -
     PLAYER_SCORE = 0
     LEVEL = 0 
     
 
     def __init__(self):
-        self.game_window = pygame.display.set_mode((800, 400),
-                                                   display=0)
+        self.game_window = pygame.display.set_mode((800, 400), display=0)
 
-        # Create the player; the player img is generated at position (30, 400)
+        # Create the game sprites 
+        # - - - - - - - - - - - - - - - - - - 
+        # Create the Shooter; the Shooter img is generated at position (0, 0), top-left of the game window
         p_initial_x = 0
         p_initial_y = 0
-        self.player = Shooter(surf_w=10, surf_h=20, init_x=p_initial_x,
-                              init_y=p_initial_y, speed=15)
+        self.player = Shooter(surf_w=10, surf_h=20, init_x=p_initial_x, init_y=p_initial_y, speed=15)
 
-        # Create the enemy
-        e_initial_x = 770
-        e_initial_y = ShooterGUI.WINDOW_HEIGHT / 2
-        self.enemy = Enemy(init_x=e_initial_x, init_y=e_initial_y, speed=9)
+        # Create the Enemy group; the group will contain all the Enemy sprites generated 
+        self.enemies = pygame.sprite.Group() 
 
         # Create a Sprite group to hold all the Bullet sprites 
         self.bullets = pygame.sprite.Group()
 
+
         # GAME LOOP
+        # - - - - - - - - - - - - - - - - - - 
         running = True
         while running:
-            # Event Handler
+
+            # Event Handling
+            # - - - - - - - - - - - - - - - - - -
             for event in pygame.event.get():
-                # Quit game
+                
+                # QUIT GAME 
                 if event.type == pygame.QUIT:
                     running = False
 
-                # Execute if the 'Player' is shooting
+                # Execute if the user pressed a key on the keyboard
                 if event.type == pygame.KEYDOWN:
 
-                    # Execute if the "space bar" was pressed
-                    if event.key == 32:  
+                    # Execute if the "space bar" was pressed; add bullets to group of bullets fired
+                    # REVIEW: Try using constant at condition: 
+                    if event.key == K_SPACE:
+                        
+                        # Create a Bullet object; add it to the group of bullets
                         bullet = self.player.shoot()
                         self.bullets.add(bullet)
 
-                        # Play the laser audio 
-                        ShooterGUI.SHOOTER_SOUND.play() 
-                        print("Audio played")
 
-            # Get the keys that were pressed
+                        enemy = Enemy(800, random.randint(0, 400))
+                        self.enemies.add(enemy)
+
+                        # Play audio for shooting
+                        # REVIEW: Not working :( 
+                        ShooterGUI.SHOOTER_SOUND.play() 
+                        # print("Audio played")
+                        
+
+            # Update Sprite locations / Handle Sprite collisions / Update player score
+            # - - - - - - - - - - - - - - - - - -
+            # Returns the state of all the keys in the keyboard in array; use to update Shooter sprite location
             pressed_keys = pygame.key.get_pressed()
 
-            # Update the player sprite locations, and draw the player sprite
-            self.player.update(pressed_keys, ShooterGUI.WINDOW_WIDTH,
-                               ShooterGUI.WINDOW_HEIGHT)
+            # Update Shooter sprite location, and draw Shooter sprite
+            self.player.update(pressed_keys, ShooterGUI.WINDOW_WIDTH, ShooterGUI.WINDOW_HEIGHT)
 
-            # Check if 'enemy' got hit by any bullets; dispose of the bullet
-            usedBullet = pygame.sprite.spritecollideany(self.enemy, self.bullets)
-            if usedBullet is not None:
-                # Reset the position of the enemy at the other end of the screen 
-                self.enemy.update(collisionDetected=True)
+            # Remove sprites that collide from their groups
+            bullets_and_enemies = pygame.sprite.groupcollide(self.bullets, self.enemies, dokilla=True, dokillb=True)
 
-                # Increase PLAYER_SCORE
-                ShooterGUI.PLAYER_SCORE += 1
-                print(ShooterGUI.PLAYER_SCORE)
+            # Update the player score; Change the mechanism 
+            if len(bullets_and_enemies) != 0: 
+              ShooterGUI.PLAYER_SCORE += 1
+              
 
-                # Increase the speed of 'Enemy' every 10 points
-                if ShooterGUI.PLAYER_SCORE % 10 == 0:
-                    self.enemy.speedUp()
-                    Bullet.speedUp()
-
-                    print(f"SPEED UP: {self.enemy.speed}")
-
-                    # Display Level Prompt
-                    self.game_window.blit(ShooterGUI.next_level_prompt(ShooterGUI.LEVEL),
-                                      (ShooterGUI.WINDOW_WIDTH/2, ShooterGUI.WINDOW_HEIGHT/2))
-
-                    # Increase the level
-                    ShooterGUI.LEVEL += 1 
-
-            else: 
-                self.enemy.update()
-
+            # Draw graphics to the window 
+            # - - - - - - - - - - - - - - - - - -
             # Draw background
             self.game_window.blit(ShooterGUI.WINDOW_BACKGROUND, (0, 0))
 
-            # Draw sprites on 'game_window'
+            # Draw Bullet sprites on the game window
             for bullet in self.bullets:
                 bullet.update()
           
                 self.game_window.blit(bullet.surface, bullet.rect)
 
+            # Draw the Enemy sprites on the game window 
+            for enemy in self.enemies: 
+              enemy.update() 
+              self.game_window.blit(enemy.surface, enemy.rect)
+
             # Update the score
             self.game_window.blit(self.player.surface, self.player.rect)
-            self.game_window.blit(self.enemy.surface, self.enemy.rect)
+            # self.game_window.blit(self.enemy.surface, self.enemy.rect)
         
 
             # Display the score on the screen
@@ -192,7 +191,7 @@ class ShooterGUI:
     def get_score_text(score=0):
         text_color = (255, 255, 255)
 
-        img = pygame.font.SysFont(None, 30).render(f"Score: {score}",
+        img = pygame.font.SysFont(None, 30).render(f"KILLS: {score}",
                                                    True, text_color)
         return img
 
