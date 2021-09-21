@@ -1,14 +1,15 @@
-import _SpriteBodies.SpriteBodies as spritebody
+import _SpriteBodies.spritebodies as spritebody
 import pygame
+import pygame.mixer 
 from pygame.locals import *
 import random
 
 
 class Shooter(spritebody.PlayerSprite):
-    SHOOTER_IMAGE = pygame.image.load("./ShooterDemo/GUI/shooter.png")
+    SHOOTER_IMAGE = pygame.image.load("./ShooterDemo/images/shooter.png")
     SHOOTER_IMAGE = pygame.transform.scale(SHOOTER_IMAGE, (60, 60))
 
-    def __init__(self, surf_w, surf_h, init_x=0, init_y=0, speed=5):
+    def __init__(self, surf_w, surf_h, init_x=0, init_y=0, speed=40):
         super().__init__(surf_w, surf_h, init_x, init_y, speed, img=Shooter.SHOOTER_IMAGE) 
 
     def update(self, pressed_keys, window_width,
@@ -30,7 +31,7 @@ class Shooter(spritebody.PlayerSprite):
 
 
 class Enemy(spritebody.EnemySprite):
-    ENEMY_IMAGE = pygame.image.load("./ShooterDemo/GUI/enemy.png")
+    ENEMY_IMAGE = pygame.image.load("./ShooterDemo/images/enemy.png")
     ENEMY_IMAGE = pygame.transform.scale(ENEMY_IMAGE, (60, 20))
 
     def __init__(self, init_x=0, init_y=0, speed=8):
@@ -51,7 +52,7 @@ class Enemy(spritebody.EnemySprite):
 
 class Bullet(spritebody.OtherSprite):
     SPEED = 10
-    BULLET_IMAGE = pygame.image.load("./ShooterDemo/GUI/bullet.png")
+    BULLET_IMAGE = pygame.image.load("./ShooterDemo/images/bullet.png")
     BULLET_IMAGE = pygame.transform.scale(BULLET_IMAGE, (20, 10))
 
     def __init__(self, init_x=0, init_y=0):
@@ -72,32 +73,43 @@ class ShooterGUI:
     # Initialize the 'pygame' module
     pygame.init()
 
+    # Initalize the 'pygame.mixer' module 
+    pygame.mixer.init() 
+
+
     # GAME WINDOW INVARIABLES
     # - - - - - - - - - - - - - -
+    # GAME WINDOW 
     WINDOW_WIDTH = 800
     WINDOW_HEIGHT = 400
-    WINDOW_BACKGROUND = pygame.image.load("./ShooterDemo/GUI/bg.png")
+    WINDOW_BACKGROUND = pygame.image.load("./ShooterDemo/images/background.png")
     
+    # GAME AUDIO 
+    filename = "./ShooterDemo/audio/shooteraudio.ogg"
+    SHOOTER_SOUND = pygame.mixer.Sound(filename)
+
     # PLAYER VARIABLES
     # - - - - - - - - - - - - - -
     PLAYER_SCORE = 0
+    LEVEL = 0 
+    
 
     def __init__(self):
         self.game_window = pygame.display.set_mode((800, 400),
                                                    display=0)
 
         # Create the player; the player img is generated at position (30, 400)
-        p_initial_x = 30
-        p_initial_y = ShooterGUI.WINDOW_HEIGHT / 2
+        p_initial_x = 0
+        p_initial_y = 0
         self.player = Shooter(surf_w=10, surf_h=20, init_x=p_initial_x,
-                              init_y=p_initial_y, speed=8)
+                              init_y=p_initial_y, speed=15)
 
         # Create the enemy
         e_initial_x = 770
         e_initial_y = ShooterGUI.WINDOW_HEIGHT / 2
         self.enemy = Enemy(init_x=e_initial_x, init_y=e_initial_y, speed=9)
 
-        # Sprite Groups
+        # Create a Sprite group to hold all the Bullet sprites 
         self.bullets = pygame.sprite.Group()
 
         # GAME LOOP
@@ -111,20 +123,27 @@ class ShooterGUI:
 
                 # Execute if the 'Player' is shooting
                 if event.type == pygame.KEYDOWN:
-                    if event.key == 32:  # Check if the "space bar" was pressed
+
+                    # Execute if the "space bar" was pressed
+                    if event.key == 32:  
                         bullet = self.player.shoot()
                         self.bullets.add(bullet)
+
+                        # Play the laser audio 
+                        ShooterGUI.SHOOTER_SOUND.play() 
+                        print("Audio played")
 
             # Get the keys that were pressed
             pressed_keys = pygame.key.get_pressed()
 
-            # Update sprite locations, and draw sprites
+            # Update the player sprite locations, and draw the player sprite
             self.player.update(pressed_keys, ShooterGUI.WINDOW_WIDTH,
                                ShooterGUI.WINDOW_HEIGHT)
 
             # Check if 'enemy' got hit by any bullets; dispose of the bullet
             usedBullet = pygame.sprite.spritecollideany(self.enemy, self.bullets)
             if usedBullet is not None:
+                # Reset the position of the enemy at the other end of the screen 
                 self.enemy.update(collisionDetected=True)
 
                 # Increase PLAYER_SCORE
@@ -138,7 +157,14 @@ class ShooterGUI:
 
                     print(f"SPEED UP: {self.enemy.speed}")
 
-            else:
+                    # Display Level Prompt
+                    self.game_window.blit(ShooterGUI.next_level_prompt(ShooterGUI.LEVEL),
+                                      (ShooterGUI.WINDOW_WIDTH/2, ShooterGUI.WINDOW_HEIGHT/2))
+
+                    # Increase the level
+                    ShooterGUI.LEVEL += 1 
+
+            else: 
                 self.enemy.update()
 
             # Draw background
@@ -153,6 +179,7 @@ class ShooterGUI:
             # Update the score
             self.game_window.blit(self.player.surface, self.player.rect)
             self.game_window.blit(self.enemy.surface, self.enemy.rect)
+        
 
             # Display the score on the screen
             self.game_window.blit(ShooterGUI.get_score_text(ShooterGUI.PLAYER_SCORE)
@@ -165,9 +192,17 @@ class ShooterGUI:
     def get_score_text(score=0):
         text_color = (255, 255, 255)
 
-        img = pygame.font.SysFont(None, 30).render(f"Score:{score}",
+        img = pygame.font.SysFont(None, 30).render(f"Score: {score}",
                                                    True, text_color)
         return img
 
+    @staticmethod
+    def next_level_prompt(leve): 
+        text_color = (255, 255, 255)
+
+        img = pygame.font.SysFont(None, 100).render(f"Level: {leve}", 
+                                                    True, text_color)
+
+        return img
 
 shooterGUI = ShooterGUI()
