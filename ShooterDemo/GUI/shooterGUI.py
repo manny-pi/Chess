@@ -3,7 +3,6 @@ import pygame.mixer
 import pygame.time 
 from pygame.locals import * 
 import _SpriteBodies.spritebodies as spritebody
-import time 
 from random import randint as r 
 
 class Shooter(spritebody.PlayerSprite):
