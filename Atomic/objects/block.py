@@ -4,6 +4,8 @@ class Block(sprite.Sprite):
     BLOCK_WIDTH, BLOCK_HEIGHT = 25, 25
 
     def __init__(self, x, y): 
+        super.__init__() 
+        
         self.x = x 
         self.y = y 
         self.width = Block.BLOCK_WIDTH 
