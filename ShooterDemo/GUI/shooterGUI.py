@@ -2,16 +2,19 @@ import pygame
 import pygame.mixer
 import pygame.time as ptime
 from pygame.locals import *
-from _SpriteBodies.spritebodies import OtherSprite, EnemySprite, PlayerSprite
 from random import randint as r
 
+import sys
+sys.path.append("/Users/Omani/Desktop/Personal/Education/Computer Science/Python/Python Projects/PyGame-Projects/ShooterDemo")
+from _SpriteBodies.spritebodies import PlayerSprite, EnemySprite, OtherSprite
 
 class Shooter(PlayerSprite):
-    SHOOTER_IMAGE = pygame.image.load("./ShooterDemo/images/shooter.png")
-    SHOOTER_IMAGE = pygame.transform.scale(SHOOTER_IMAGE, (60, 60))
+    # SHOOTER_IMAGE = pygame.image.load("images/shooter.png")
+    # SHOOTER_IMAGE = pygame.transform.scale(SHOOTER_IMAGE, (60, 60))
 
     def __init__(self, surf_w, surf_h, init_x=0, init_y=0, speed=5):
-        super().__init__(surf_w, surf_h, init_x, init_y, speed, img=Shooter.SHOOTER_IMAGE)
+        super().__init__(surf_w, surf_h, 
+        init_x=init_x, init_y=init_y, speed=speed) 
 
     def update(self, pressed_keys, window_width,
                window_height):
@@ -34,12 +37,12 @@ class Shooter(PlayerSprite):
 
 
 class Enemy(EnemySprite):
-    ENEMY_IMAGE = pygame.image.load("./ShooterDemo/images/enemy.png")
-    ENEMY_IMAGE = pygame.transform.scale(ENEMY_IMAGE, (60, 20))
+    # ENEMY_IMAGE = pygame.image.load("./ShooterDemo/images/enemy.png")
+    # ENEMY_IMAGE = pygame.transform.scale(ENEMY_IMAGE, (60, 20))
     SPEED = 5
 
     def __init__(self, init_x=0, init_y=0):
-        super().__init__(init_x, init_y, speed=Enemy.SPEED, img=Enemy.ENEMY_IMAGE)
+        super().__init__(init_x, init_y, speed=Enemy.SPEED)
 
     def update(self):
         self.rect.move_ip(-self.speed, 0)
@@ -52,11 +55,11 @@ class Enemy(EnemySprite):
 
 class Bullet(OtherSprite):
     SPEED = 10
-    BULLET_IMAGE = pygame.image.load("./ShooterDemo/images/bullet.png")
-    BULLET_IMAGE = pygame.transform.scale(BULLET_IMAGE, (20, 10))
+    # BULLET_IMAGE = pygame.image.load("./ShooterDemo/images/bullet.png")
+    # BULLET_IMAGE = pygame.transform.scale(BULLET_IMAGE, (20, 10))
 
     def __init__(self, init_x=0, init_y=0):
-        super().__init__(init_x, init_y, speed=Bullet.SPEED, img=Bullet.BULLET_IMAGE)
+        super().__init__(init_x, init_y, speed=Bullet.SPEED)
 
     def update(self):
         self.rect.move_ip(self.speed, 0)
@@ -76,14 +79,14 @@ class ShooterGUI:
     # GAME WINDOW 
     WINDOW_WIDTH = 800
     WINDOW_HEIGHT = 400
-    WINDOW_BACKGROUND = pygame.image.load("./ShooterDemo/images/background.png")
+    # WINDOW_BACKGROUND = pygame.image.load("./ShooterDemo/images/background.png")
 
     ENEMIES_LIMIT = 10
     LEVEL = 0
 
     # GAME AUDIO 
-    filename = "./ShooterDemo/audio/shooteraudio.ogg"
-    SHOOTER_SOUND = pygame.mixer.Sound(filename)
+    # filename = "./ShooterDemo/audio/shooteraudio.ogg"
+    # SHOOTER_SOUND = pygame.mixer.Sound(filename)
 
     # SHOOTER VARIABLES
     # - - - - - - - - - - - - - - - - - -
@@ -94,12 +97,11 @@ class ShooterGUI:
         self.game_window = pygame.display.set_mode((800, 400), display=0)
 
         # Create the game sprites 
-        # - - - - - - - - - - - - - - - - - - 
-        # Create the Shooter; the Shooter img is generated at position (0, 0), top-left of the game window
+            # - - - - - - - - - - - - - - - - - - 
+            # Create the Shooter; the Shooter img is generated at position (0, 0), top-left of the game window
         p_initial_x = 0
         p_initial_y = 0
-        self.player = Shooter(surf_w=10, surf_h=20, init_x=p_initial_x,
-                              init_y=p_initial_y, speed=7)
+        self.player = Shooter(surf_w=10, surf_h=20, init_x=p_initial_x, init_y=p_initial_y, speed=7)
 
         # Create the Enemy group; the group will contain all the Enemy sprites generated 
         self.enemies = pygame.sprite.Group()
@@ -108,8 +110,8 @@ class ShooterGUI:
         self.bullets = pygame.sprite.Group()
 
         # User Events
-        # - - - - - - - - - - - - - - - - - -
-        # Event to generate Enemy / Generate Enemy every 4 seconds
+            # - - - - - - - - - - - - - - - - - -
+            # Event to generate Enemy / Generate Enemy every 4 seconds
         self.timeToEnemy = 4000
         self.generateEnemy = pygame.event.Event(pygame.USEREVENT)
         ptime.set_timer(self.generateEnemy.type, self.timeToEnemy)
@@ -138,7 +140,7 @@ class ShooterGUI:
 
                     # Execute if the "space bar" was pressed; add bullets to group of bullets fired
                     # REVIEW: Try using constant at condition: 
-                    if event.key == K_SPACE:
+                    if event.key == pygame.K_SPACE:
                         # Create a Bullet object; add it to the group of bullets
                         bullet = self.player.shoot()
                         self.bullets.add(bullet)
@@ -160,8 +162,8 @@ class ShooterGUI:
                     self.displayNextLevelPrompt = False
 
             # Update Sprite locations / Handle Sprite collisions / Update player score
-            # - - - - - - - - - - - - - - - - - -
-            # Returns the state of all the keys in the keyboard in array; use to update Shooter sprite location
+                # - - - - - - - - - - - - - - - - - -
+                # Returns the state of all the keys in the keyboard in array; use to update Shooter sprite location
             pressed_keys = pygame.key.get_pressed()
 
             # Update Shooter sprite location, and draw Shooter sprite
@@ -180,7 +182,7 @@ class ShooterGUI:
             if self.PLAYER_SCORE % 10 == 0 and self.PLAYER_SCORE != 0:
                 Enemy.SPEED += 2
 
-                # Draw graphics to the window
+            # Draw graphics to the window
             # - - - - - - - - - - - - - - - - - -
             self.render_screen()
 
@@ -189,7 +191,7 @@ class ShooterGUI:
 
     def render_screen(self):
         # Draw background
-        self.game_window.blit(ShooterGUI.WINDOW_BACKGROUND, (0, 0))
+        # self.game_window.blit(ShooterGUI.WINDOW_BACKGROUND, (0, 0))
 
         # Draw the Shooter sprite on the game window
         self.game_window.blit(self.player.surface, self.player.rect)
@@ -204,14 +206,15 @@ class ShooterGUI:
             enemy.update()
             self.game_window.blit(enemy.surface, enemy.rect)
 
-        # Display the player score on the screen
-        scoreText = ShooterGUI.get_score_text(ShooterGUI.PLAYER_SCORE)
-        self.game_window.blit(scoreText, (700, 10))
-
         # Display the next level prompt on the screen
         if self.displayNextLevelPrompt is True:
             nextLevelText = self.next_level_prompt(level=1)
             self.game_window.blit(nextLevelText, (50, 50))
+
+        # Display the player score on the screen
+        scoreText = ShooterGUI.get_score_text(ShooterGUI.PLAYER_SCORE)
+        self.game_window.blit(scoreText, (700, 10))
+
 
         # Update the frame
         pygame.display.flip()

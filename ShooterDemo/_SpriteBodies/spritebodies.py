@@ -2,7 +2,6 @@ import pygame
 
 """ This module contains basic sprite bodies.  It allows you to add images to your sprites, and set the speed at which your sprite will move
 """
-
 class PlayerSprite(pygame.sprite.Sprite):
     def __init__(self, surf_w, surf_h, init_x=0, init_y=0, speed=5, img=None):
         

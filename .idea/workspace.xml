@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="652f84c5-e344-4d02-b5fd-25651af6fc1b" name="Default Changelist" comment="Attempt #1: Committing PyGame Files">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ShooterDemo/GUI/shooterGUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/ShooterDemo/GUI/shooterGUI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ShooterDemo/audio/shooteraudio.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ShooterDemo/audio/shooteraudio.ogg" beforeDir="false" afterPath="$PROJECT_DIR$/ShooterDemo/audio/shooteraudio.ogg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/lib/python3.8/site-packages/pip/_vendor/html5lib/html5parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/lib/python3.8/site-packages/pip/_vendor/html5lib/html5parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/lib/python3.8/site-packages/pip/_vendor/html5lib/treebuilders/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/lib/python3.8/site-packages/pip/_vendor/html5lib/treebuilders/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/lib/python3.8/site-packages/pip/_vendor/html5lib/treebuilders/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/lib/python3.8/site-packages/pip/_vendor/html5lib/treebuilders/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/lib/python3.8/site-packages/pip/_vendor/html5lib/treewalkers/etree_lxml.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/lib/python3.8/site-packages/pip/_vendor/html5lib/treewalkers/etree_lxml.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/lib/python3.8/site-packages/setuptools/command/easy_install.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/lib/python3.8/site-packages/setuptools/command/easy_install.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +56,7 @@
       <recent name="$PROJECT_DIR$/../Personal Projects/GUI Projects/timekeeper/" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager">
     <configuration name="Scramble" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Random Projects" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -181,15 +183,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Python.main" />
-        <item itemvalue="Python.shooterGUI" />
-        <item itemvalue="Python.Trash" />
-        <item itemvalue="Python.ShooterGUI" />
-        <item itemvalue="Python.Scramble" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
