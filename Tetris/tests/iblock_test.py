@@ -4,8 +4,9 @@ path.append("/Users/Omani/Desktop/Personal/Education/Computer Science/Python/Pyt
 
 import pygame 
 from basicblock import BasicBlock 
-from iblock import IBlock
 from blockattributes import * 
+from iblock import IBlock
+from pygame import mouse 
 
 # Test the blocks 
 def testBlock(): 
@@ -16,17 +17,16 @@ def testBlock():
     # Set game dimensions 
     W, H = 500, 600
     WINDOW = pygame.display.set_mode((W, H), display=0)
-    FRAMES_PER_SECOND = 2
+    pygame.display.set_caption("iblock_test")
+    FRAMES_PER_SECOND = 1.5
     frames_passed = 0 
     
-    # Create a block to test
-    block = BasicBlock(Color.BLUE, 50, 150, 10) 
-
     # Create I-Block to test 
-    i_init_x, i_init_y = 0, 100
-    iblock = IBlock(Color.BLUE, i_init_x, i_init_y, Orientation.UP, 0)
+    i_init_x, i_init_y = 100, 150
+    iblock = IBlock(i_init_x, i_init_y, Color.BLUE, Orientation.UP, 0)
+    print(repr(iblock))
     
-    # Game clock 
+    # Game clsk 
     clock = pygame.time.Clock() 
 
     # Game loop
@@ -37,23 +37,21 @@ def testBlock():
             if event.type == pygame.QUIT: 
                 running = False
 
-        # Update the blocks location
-        # - - - - - - - - - - 
-        # block.y += 50
-        iblock.goLeft() 
-        iblock.goRight() 
+            # Execute if the user left-clicks the mouse 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                iblock.changeOrientation()  
+                print(iblock)
+
+            elif event.type == pygame.KEYDOWN: 
+                if event.key == pygame.K_a: 
+                    iblock.goLeft() 
+
+                elif event.key == pygame.K_d:
+                    iblock.goRight() 
+
+        # Move the block down 
+        # - - - - - - - - - -   
         iblock.goDown() 
-
-        # Change orientation of block when y = 
-        if iblock.orientation != Orientation.RIGHT and frames_passed == 3: 
-            iblock.changeOrientation(orientation=Orientation.RIGHT)
-            print(" - - orientation changed - - up -> right ")
-            print(repr(iblock))
-
-        if iblock.orientation != Orientation.DOWN and frames_passed == 6: 
-            iblock.changeOrientation(orientation=Orientation.DOWN)
-            print(" - - orientation changed - - right -> down ")
-            print(repr(iblock))
         
         # Clear the window 
         # - - - - - - - - - -   
@@ -61,7 +59,6 @@ def testBlock():
 
         # Render graphics 
         # - - - - - - - - - - 
-        # window.blit(block.surface, (block.x, block.y))         # Render BasicBlock graphic
         for block in iblock:                                     # Render IBlock graphic
             WINDOW.blit(block.surface, (block.x, block.y))
         
@@ -71,7 +68,7 @@ def testBlock():
         # - - - - - - -
         clock.tick(FRAMES_PER_SECOND)
         frames_passed += 1 
-        print(frames_passed)
+        # print(frames_passed)
 
     pygame.quit() 
 

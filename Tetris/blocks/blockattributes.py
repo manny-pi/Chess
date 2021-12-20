@@ -9,7 +9,10 @@ class Color(Enum):
     YELLOW   = (252, 249, 56)
     ORANGE   = (252, 128, 56)
     BLACK    = (0, 0, 0)
-    WHITE    = (255, 255, 255)
+    PINK     = (255, 94, 193)
+    SKY_BLUE = (99, 226, 255)
+    LIME     = (213, 255, 43)
+    CUTE     = (82, 255, 148) 
 
 
 class Orientation(Enum):

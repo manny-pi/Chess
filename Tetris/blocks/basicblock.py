@@ -20,4 +20,4 @@ class BasicBlock(sprite.Sprite):
         pass 
 
     def __repr__(self): 
-        return f"BasicBlock({self.color})"
+        return f"BasicBlock({self.x}, {self.y}, {self.color})"

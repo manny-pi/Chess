@@ -1,8 +1,8 @@
 from basicblock import BasicBlock
 from blockattributes import * 
 
-class LBlock: 
-    """ The 'L' shape """
+class JBlock: 
+    """ The 'J' shape """
 
     def __init__(self, x, y, color, orientation, speed): 
         self.color        = color 
@@ -33,7 +33,7 @@ class LBlock:
             self.ref_block.y = y 
 
             # Set the location of the short appendage 
-            self.short_app.x = self.ref_block.x + 50
+            self.short_app.x = self.ref_block.x - 50
             self.short_app.y = self.ref_block.y 
 
             # Set the location of the long appendage 
@@ -52,7 +52,7 @@ class LBlock:
         elif self.orientation == Orientation.DOWN: 
             pass
 
-    def goLeft(self): 
+        def goLeft(self): 
         """ Used to move the block left """
 
         if self.orientation == Orientation.UP: 
@@ -107,85 +107,79 @@ class LBlock:
     def speedUp(self): 
         """ Used when the user wants the block to descend faster """
         pass 
+    
+    def changeOrientation(self, orientation=None): 
+        if self.orientation == Orientation.UP: 
+            self.orientation = Orientation.RIGHT
 
-    def changeOrientation(self): 
-        """ Change the orientation of the shape """ 
+            # Move ref block 2 units to the left 
+            self.ref_block.x -= 100
 
-        # Change UP -> RIGHT 
-        if self.orientation == Orientation.UP:
-            self.orientation = Orientation.RIGHT 
+            # Move short_app above ref block 
+            self.short_app.x = self.ref_block.x
+            self.short_app.y = self.ref_block.y - 50 
 
-            # Move ref block 2 units up 
-            self.ref_block.y -= 100
-
-            # Move short_app underneath ref block 
-            self.short_app.x = self.ref_block.x 
-            self.short_app.y = self.ref_block.y + 50 
-
-            # Move long_app to the right of ref block
-            i = 1
+            # Move long_app to the right of ref block 
+            i = 1 
             for block in self.long_app: 
                 block.x = self.ref_block.x + 50 * i 
                 block.y = self.ref_block.y 
                 i += 1
+            
+            return 
+            
+        if self.orientation == Orientation.RIGHT: 
+            self.orientation = Orientation.DOWN
 
-            return
+            # Move ref block 2 units up 
+            self.ref_block.y -= 100
 
-        # Change RIGHT -> DOWN 
-        if self.orientation == Orientation.RIGHT:
-            self.orientation = Orientation.DOWN 
+            # Move short_app to the right of ref block
+            self.short_app.x = self.ref_block.x + 50 
+            self.short_app.y = self.ref_block.y 
+
+            # Move long_app under ref block
+            i = 1
+            for block in self.long_app: 
+                block.x = self.ref_block.x 
+                block.y = self.ref_block.y + 50 * i 
+                i += 1
+
+            return 
+
+        if self.orientation == Orientation.DOWN: 
+            self.orientation = Orientation.LEFT
 
             # Move ref block 2 units right 
             self.ref_block.x += 100
 
-            # Move short_app to the left of ref block 
-            self.short_app.x = self.ref_block.x - 50
-            self.short_app.y = self.ref_block.y
+            # Move short_app to the left of ref block
+            self.short_app.x = self.ref_block.x
+            self.short_app.y = self.ref_block.y + 50 
 
-            # Move long_app underneath ref block 
-            i = 1 
-            for block in self.long_app: 
-                block.x = self.ref_block.x 
-                block.y = self.ref_block.y + 50 * i
-                i += 1
-
-            return  
-
-        # Change DOWN -> LEFT 
-        if self.orientation == Orientation.DOWN: 
-            self.orientation = Orientation.LEFT
-
-            # Move ref block 2 units down 
-            self.ref_block.y += 100
-            
-            # Move short_app above ref block 
-            self.short_app.x = self.ref_block.x 
-            self.short_app.y = self.ref_block.y - 50
-
-            # Move long_app to the left of ref block 
-            i = 1 
+            # Move long_app under ref block
+            i = 1
             for block in self.long_app: 
                 block.x = self.ref_block.x - 50 * i 
-                block.y = self.ref_block.y 
+                block.y = self.ref_block.y
                 i += 1
 
-            return  
+            return 
 
-        # Change LEFT -> UP 
         if self.orientation == Orientation.LEFT: 
             self.orientation = Orientation.UP
 
-            # Move ref block 2 units left 
-            self.ref_block.x -= 100
+            # Move ref block 2 units down 
+            self.ref_block.y += 100
 
-            # Move short_app to the right of ref block 
-            self.short_app.x = self.ref_block.x + 50 
-            self.short_app.y = self.ref_block.y 
+            # Move short_app to the left of ref block 
+            self.short_app.x = self.ref_block.x - 50 
+            self.short_app.y = self.ref_block.y
 
-            # Move long_app above ref block 
+            # Move long long_app above ref block 
             i = 1
             for block in self.long_app: 
-                block.x = self.ref_block.x 
+                block.x = self.ref_block.x
                 block.y = self.ref_block.y - 50 * i 
                 i += 1
 

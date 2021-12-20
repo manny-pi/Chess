@@ -5,7 +5,7 @@ path.append("/Users/Omani/Desktop/Personal/Education/Computer Science/Python/Pyt
 import pygame 
 from basicblock import BasicBlock 
 from blockattributes import * 
-from lblock import LBlock
+from jblock import JBlock
 from pygame import mouse 
 
 # Test the blocks 
@@ -17,14 +17,14 @@ def testBlock():
     # Set game dimensions 
     W, H = 500, 600
     WINDOW = pygame.display.set_mode((W, H), display=0)
-    pygame.display.set_caption("lblock_test")
-    FRAMES_PER_SECOND = 1.5
+    pygame.display.set_caption("jblock_test")
+    FRAMES_PER_SECOND = 10
     frames_passed = 0 
 
     # Create I-Block to test 
-    i_init_x, i_init_y = 100, 150
-    lblock = LBlock(i_init_x, i_init_y, Color.BLUE, Orientation.UP, 0)
-    print(repr(lblock))
+    i_init_x, i_init_y = 200, 200
+    jblock = JBlock(i_init_x, i_init_y, Color.BLUE, Orientation.UP, 0)
+    print(repr(jblock))
     
     # Game clsk 
     clock = pygame.time.Clock() 
@@ -39,21 +39,23 @@ def testBlock():
 
             # Execute if the user left-clicks the mouse 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                lblock.changeOrientation()  
-                print(lblock)
+                jblock.changeOrientation()  
+                print(jblock)
 
             elif event.type == pygame.KEYDOWN: 
                 if event.key == pygame.K_a: 
-                    lblock.goLeft() 
+                    jblock.goLeft() 
 
                 elif event.key == pygame.K_d:
-                    lblock.goRight() 
+                    jblock.goRight() 
 
-                print(lblock)
+                print(jblock)
         
+        jblock.changeOrientation()  
+
         # Move the block down
         # - - - - - - - - - -   
-        lblock.goDown() 
+        # jblock.goDown() 
 
         # Clear the window 
         # - - - - - - - - - -   
@@ -61,7 +63,7 @@ def testBlock():
 
         # Render graphics 
         # - - - - - - - - - - 
-        for block in lblock:                                     # Render IBlock graphic
+        for block in jblock:     # Render JBlock graphic
             WINDOW.blit(block.surface, (block.x, block.y))
         
         # Update the frame 
