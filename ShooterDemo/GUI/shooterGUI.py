@@ -123,23 +123,24 @@ class ShooterGUI:
         self.displayNextLevelPrompt = False
 
         # GAME LOOP
-        # - - - - - - - - - - - - - - - - - -
+            # - - - - - - - - - - - - - - - - - -
         running = True
         while running:
 
             # Event Handling
-            # - - - - - - - - - - - - - - - - - -
+                # - - - - - - - - - - - - - - - - - -
             for event in pygame.event.get():
 
                 # QUIT GAME 
+                    # - - - - - - - - - - - - - - - - - -
                 if event.type == pygame.QUIT:
                     running = False
 
                 # Execute if the user pressed a key on the keyboard
+                    # - - - - - - - - - - - - - - - - - -
                 if event.type == pygame.KEYDOWN:
 
                     # Execute if the "space bar" was pressed; add bullets to group of bullets fired
-                    # REVIEW: Try using constant at condition: 
                     if event.key == pygame.K_SPACE:
                         # Create a Bullet object; add it to the group of bullets
                         bullet = self.player.shoot()
@@ -183,7 +184,7 @@ class ShooterGUI:
                 Enemy.SPEED += 2
 
             # Draw graphics to the window
-            # - - - - - - - - - - - - - - - - - -
+                # - - - - - - - - - - - - - - - - - -
             self.render_screen()
 
         # Close pygame

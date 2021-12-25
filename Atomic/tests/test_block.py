@@ -18,13 +18,13 @@ def testBlock():
     FRAMES_PER_SECOND = 10
     frames_passed = 0 
     
+    # Game clock 
+    clock = pygame.time.Clock() 
+    
     # Create a block to test
     init_x, init_y = 150, 250
     block = Block(init_x, init_y) 
 
-    
-    # Game clock 
-    clock = pygame.time.Clock() 
 
     # Game loop
     running = True 
@@ -59,6 +59,7 @@ def testBlock():
         WINDOW.blit(block.surface, (block.x, block.y))
         
         # Update the frame 
+        # - - - - - - - - - -
         pygame.display.flip() 
 
         # - - - - - - -

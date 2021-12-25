@@ -10,8 +10,3 @@ class Atom(sprite.Sprite):
 
         self.color = color 
         self.speed = speed 
-
-
-def generate_atoms(): 
-    """ Generates a bunch of random objects """
-    pass 

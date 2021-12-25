@@ -1,13 +1,15 @@
 from pygame import sprite, Surface
+from atom import Atom 
 
 class Block(sprite.Sprite): 
     BLOCK_WIDTH, BLOCK_HEIGHT = 25, 25
 
     def __init__(self, x, y): 
-        super.__init__() 
-        
+        super().__init__() 
+
         self.x = x 
         self.y = y 
+        
         self.width = Block.BLOCK_WIDTH 
         self.height = Block.BLOCK_HEIGHT 
 
@@ -19,5 +21,9 @@ class Block(sprite.Sprite):
 
     def setY(self, y): 
         self.y = y 
+
+    def burst(self): 
+        """  """
+        pass 
 
 
