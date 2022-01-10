@@ -1,5 +1,7 @@
 from basicblock import BasicBlock
 from blockattributes import * 
+import pygame
+
 
 class IBlock: 
     """ The 'I' shape """
@@ -11,6 +13,8 @@ class IBlock:
         self.blocks      = None         # Store all the blocks / used for iteration 
         self.ref_block   = None         # Reference block used when changing orientation
 
+        self.group        = Group()     # Use to test for collision
+
         # Index for the iterator
         self.index = 0 
 
@@ -18,7 +22,7 @@ class IBlock:
         if self.orientation   == Orientation.UP: 
 
             # Intialize constituent blocks of the IBlock; Assign a reference block 
-            self.blocks = [BasicBlock(random_color(), x + (50 * i), y, speed) for i in range(0, 4)]
+            self.blocks = [BasicBlock(color, x + (50 * i), y, speed) for i in range(0, 4)]
             self.ref_block = self.blocks[0]
 
         elif self.orientation == Orientation.LEFT :
@@ -29,6 +33,8 @@ class IBlock:
         
         elif self.orientation == Orientation.DOWN: 
             pass 
+
+        self.group.add(*self.blocks)
 
     def goLeft(self): 
         """ Used to move the block left """
@@ -46,7 +52,7 @@ class IBlock:
         if self.orientation == Orientation.DOWN:
             # if self.ref_block.x > 150: 
             for block in self.blocks: 
-                block.x += 50
+                block.x -= 50
         
         if self.orientation == Orientation.LEFT: 
             # if self.ref_block.x > 0: 

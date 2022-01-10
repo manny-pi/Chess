@@ -14,6 +14,8 @@ class SBlock:
         self.right_app    = None        # Store right appendage
         self.blocks       = None        # Store all the blocks / used for iteration
 
+        self.group        = Group()     # Use to test for collision
+        
         # Index for the iterator
         self.index = 0  
 
@@ -21,7 +23,7 @@ class SBlock:
         if self.orientation   == Orientation.UP: 
 
             # Intialize constituent blocks of the IBlock; Assign a reference block 
-            self.blocks = [BasicBlock(random_color(), x + (50 * i), y, speed) for i in range(0, 4)]
+            self.blocks = [BasicBlock(color, x + (50 * i), y, speed) for i in range(0, 4)]
 
             # Set the appendages
             self.ref_block  = self.blocks[0]
@@ -40,6 +42,8 @@ class SBlock:
             # Set the right_app to the right of ref block
             self.right_app.x = self.ref_block.x + 50
             self.right_app.y = self.ref_block.y
+
+        self.group.add(*self.blocks)
 
     def goLeft(self): 
         """ Used to move the block left """
@@ -102,6 +106,16 @@ class SBlock:
 
             return 
     
+    # DEBUGGER METHODS 
+    # - - - - - - - - - - - - - - - - 
+    # Used in debugging; returns the x coordinate of the ref_block 
+    def x(self): 
+        return self.ref_block.x 
+    
+    # Used in debugging; returns the y coordinate of the ref_block 
+    def y(self): 
+        return self.ref_block.y 
+
     def __iter__(self):
         return self 
 
@@ -114,7 +128,7 @@ class SBlock:
             raise StopIteration
 
     def __repr__(self): 
-        return f"ComplexBlock('I', {self.ref_block.x}, {self.ref_block.y}, {self.color}, {self.orientation})"
+        return f"ComplexBlock('S', {self.ref_block.x}, {self.ref_block.y}, {self.color}, {self.orientation})"
 
 
 def random_color(): 

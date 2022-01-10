@@ -11,6 +11,8 @@ class OBlock:
         self.ref_block    = None        # Store reference block 
         self.blocks       = None        # Store all the blocks / used for iteration
 
+        self.group        = Group()     # Use to test for collision
+        
         # Index for the iterator
         self.index = 0  
 
@@ -18,7 +20,7 @@ class OBlock:
         if self.orientation   == Orientation.UP: 
 
             # Intialize constituent blocks of the IBlock; Assign a reference block 
-            self.blocks = [BasicBlock(random_color(), x + (50 * i), y, speed) for i in range(0, 4)]
+            self.blocks = [BasicBlock(color, x + (50 * i), y, speed) for i in range(0, 4)]
 
             self.ref_block = self.blocks[0]
 
@@ -39,6 +41,9 @@ class OBlock:
         
         elif self.orientation == Orientation.DOWN: 
             pass
+
+        self.group.add(*self.blocks)
+
 
     def goLeft(self): 
         """ Used to move the block left """
@@ -77,7 +82,18 @@ class OBlock:
             raise StopIteration
 
     def __repr__(self): 
-        return f"ComplexBlock('I', {self.ref_block.x}, {self.ref_block.y}, {self.color}, {self.orientation})"
+        return f"ComplexBlock('O', {self.ref_block.x}, {self.ref_block.y}, {self.color}, {self.orientation})"
+
+
+    # DEBUGGER METHODS 
+    # - - - - - - - - - - - - - - - - 
+    # Used in debugging; returns the x coordinate of the ref_block 
+    def x(self): 
+        return self.ref_block.x 
+    
+    # Used in debugging; returns the y coordinate of the ref_block 
+    def y(self): 
+        return self.ref_block.y 
 
 
 def random_color(): 

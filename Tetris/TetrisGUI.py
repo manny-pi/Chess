@@ -10,8 +10,8 @@ class TetrisGUI:
 
         # Set game dimensions 
         WINDOW_HEIGHT = 600 
-        WINDOW_WIDTH = 500
-        GAME_WINDOW = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_WIDTH), display=0)
+        WINDOW_WIDTH = 800
+        GAME_WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), display=0)
 
         # Game loop
         running = True 

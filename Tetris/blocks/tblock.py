@@ -7,18 +7,20 @@ class TBlock:
     def __init__(self, x, y, color, orientation, speed): 
         self.color        = color 
         self.orientation  = orientation 
-
+        
         self.ref_block    = None        # Store reference block 
         self.left_app     = None        # Store the 'left' part of 'T'
         self.right_app    = None        # Store the 'right' part of 'T'
         self.bottom_app   = None        # Store the 'bottom' part of 'T'
         self.blocks       = None        # Store all the blocks / used for iteration
     
+        self.group        = Group()     # Use to test for collision
+
         # Index for the iterator
         self.index = 0    
 
         if orientation == Orientation.UP: 
-            self.blocks = [BasicBlock(random_color(), x + (50 * i), y, speed) for i in range(0, 4)]
+            self.blocks = [BasicBlock(color, x + (50 * i), y, speed) for i in range(0, 4)]
 
             self.ref_block  = self.blocks[0]
             self.left_app   = self.blocks[1]
@@ -41,6 +43,8 @@ class TBlock:
             self.bottom_app.x = self.ref_block.x
             self.bottom_app.y = self.ref_block.y + 50
 
+        self.group.add(*self.blocks)
+
     def goLeft(self): 
         """ Used to move the block left """
 
@@ -57,7 +61,7 @@ class TBlock:
         if self.orientation == Orientation.DOWN:
             # if self.ref_block.x > 150: 
             for block in self.blocks: 
-                block.x += 50
+                block.x -= 50
         
         if self.orientation == Orientation.LEFT: 
             # if self.ref_block.x > 0: 
@@ -171,6 +175,16 @@ class TBlock:
 
             return 
 
+    # DEBUGGER METHODS 
+    # - - - - - - - - - - - - - - - - 
+    # Used in debugging; returns the x coordinate of the ref_block 
+    def x(self): 
+        return self.ref_block.x 
+    
+    # Used in debugging; returns the y coordinate of the ref_block 
+    def y(self): 
+        return self.ref_block.y 
+        
     def __iter__(self):
         return self 
 
@@ -183,7 +197,7 @@ class TBlock:
             raise StopIteration
 
     def __repr__(self): 
-        return f"ComplexBlock('I', {self.ref_block.x}, {self.ref_block.y}, {self.color}, {self.orientation})"
+        return f"ComplexBlock('T', {self.ref_block.x}, {self.ref_block.y}, {self.color}, {self.orientation})"
 
 
 
