@@ -37,8 +37,11 @@ class Piece(Sprite):
 
 class Pawn(Piece): 
 
-   def __init__(self, key=(), pos=(), team=Team.WHITE): 
+    def __init__(self, key=(), pos=(), team=Team.WHITE): 
         super().__init__(name="Pawn", filepath=None, key=key, pos=pos, s="P", team=team)
+        
+    def advance(self): 
+        pass
         
 
 class Rook(Piece): 

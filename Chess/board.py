@@ -80,13 +80,9 @@ class Tile(Sprite):
     def holdPiece(self, piece): 
         self.pieceHolding = piece
         self.surface.blit(piece.image, piece.rect)
-        print(piece.rect)
-
-    def __str__(self): 
-            return f'Tile(key={self.key}, color={self.color}'
-        
+ 
     def __repr__(self): 
-        return f'Tile(name=(), key={self.key}, color={self.color})'
+        return f'Tile(name={self.name}, key={self.key}, color={self.color}, pos={self.pos})'
     
 
 class Board: 
@@ -102,23 +98,7 @@ class Board:
         # Use for iteration 
         self.row = self.col = 0
 
-        colorPicker = 1 
-        for number in Number:
-            self.col = 0
-            for letter in Letter: 
-                color = 'B' if colorPicker % 2 == 0 else 'W'
-                x = 75 * self.col
-                y = 75 * self.row 
-                tile = Tile(color=color, key=(number, letter), pos=(x, y))
-                self.boardMatrix[self.row].append(tile) 
-                self.col += 1
-                colorPicker += 1
-
-            self.row += 1
-            colorPicker -= 1      # Offset 'c' to make sure tiles are properly colored
-
-        self.row = self.col = 0  # Reset to use for iteration 
-
+        self.__generateTiles()   # Initialize the board tiles
         self.__generatePieces()  # Initialize the game pieces 
 
     def selectTile(self, x, y): 
@@ -147,13 +127,16 @@ class Board:
                 # Activate the selected tile 
                 selectedTile.activate()
                 self.activeTile = selectedTile
-
+            
         # Execute if there is no active tile on the board / Activate a tile 
         elif not self.isActive: 
             selectedTile.activate() 
 
             self.isActive = True 
             self.activeTile = selectedTile
+
+        print(f'{self.activeTile} is active')
+        
             
     def __updateBoard(self): 
         """ Adjust the locations of pieces on the board """ 
@@ -163,13 +146,37 @@ class Board:
         else: 
             self.isActive = True 
 
+    def __generateTiles(self):
+        """ Generates the tiles of the board """ 
+
+        colorPicker = 1 
+        for n in Number:
+            self.col = 0
+            for l in Letter: 
+                color = 'B' if colorPicker % 2 == 0 else 'W'
+                x = 75 * self.col
+                y = 75 * self.row 
+
+                name = f'{l.name}:{n.name}'
+                key = (n, l) 
+                pos = (x, y) 
+
+                tile = Tile(name=name, color=color, key=key, pos=pos)
+                self.boardMatrix[self.row].append(tile) 
+                self.col += 1
+                colorPicker += 1
+
+            self.row += 1
+            colorPicker -= 1      # Offset 'c' to make sure tiles are properly colored
+        self.row = self.col = 0   # Reset for iteration 
+
     def __generatePieces(self): 
         """ Initializes the game pieces on the board """
         
-        key = (Number.EIGHT.value, Letter.A.value)
-        tile, tilePos = self.__getTile(key)
+        tileKey = (Number.EIGHT.value, Letter.B.value)
+        tile, tilePos = self.__getTile(tileKey)
 
-        pawn = Pawn(key=key, pos=tilePos, team=Team.BLACK)
+        pawn = Pawn(key=tileKey, pos=tilePos, team=Team.WHITE)
         tile.holdPiece(pawn) 
 
     def __getTile(self, key=()): 
@@ -180,7 +187,6 @@ class Board:
         tilePos = tile.pos                      # Get the position of the tile 
         
         return tile, tilePos
-
 
     def __iter__(self):
         return self 
@@ -202,4 +208,4 @@ class Board:
 
 if __name__ == '__main__': 
     Tile() 
-    Board(90, 0) 
+    Board() 
