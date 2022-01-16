@@ -26,8 +26,5 @@ class BasicBlock(sprite.Sprite):
     def top(self): 
         return self.y
 
-    def update_pos(self, pressed_keys): 
-        pass 
-
     def __repr__(self): 
         return f"BasicBlock({self.x}, {self.y}, {self.color})"

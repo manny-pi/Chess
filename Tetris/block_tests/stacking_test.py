@@ -1,10 +1,7 @@
-from sys import path 
-path.append("/Users/Omani/Desktop/Personal/Education/Computer Science/Python/Python\
- Projects/PyGame-Projects/Tetris/blocks")
-
 import pygame 
-from pygame.sprite import Group, spritecollideany
+from pygame.sprite import Group, spritecollideany, groupcollide 
 
+from blockattributes import * 
 from iblock import IBlock
 from jblock import JBlock 
 from lblock import LBlock
@@ -64,32 +61,33 @@ def testBlock():
         # Check if 'falling_block' landed on any existing blocks
         # - - - - - - - - - - - - 
         if len(game_blocks) > 1: 
+            print(falling_block)
+            
 
-            # Iterate over the constituents of the falling block
-            for block in falling_block: 
-                print(" - - - - - - - - - - - - - - - - - - -")
+        #     # Iterate over the constituents of the falling block
+        #     for block in falling_block: 
+        #         print(" - - - - - - - - - - - - - - - - - - -")
                 
-                in_set = spritecollideany(block, block_const, collision)   # Store the block that falling_block landed on
-                if in_set: 
-                    print(" - - - - Collision Detected - - - -")
-                    print(in_set, '\n')
-                    store_constituents(falling_block, block_const)
-                    falling_block = gen_block(W)
-                    game_blocks.append(falling_block)
+        #         in_set = spritecollideany(block, block_const, collision)   # Store the blocks that falling_block landed on
+        #         if in_set: 
+        #             print(" - - - - Collision Detected - - - -")
+        #             print(in_set, '\n')
+        #             store_constituents(falling_block, block_const)
+        #             falling_block = gen_block(W)
+        #             game_blocks.append(falling_block)
 
-            # Execute if falling_block didn't land on anything, and is at the bottom of the screen 
-                if falling_block.y() == H - 50: 
-                    store_constituents(falling_block, block_const)      # Store the constituent blocks of falling block 
-                    falling_block = gen_block(W)                        # Create a falling_block 
-                    game_blocks.append(falling_block)                   # Add it to the list of game_blocks 
+        #     # Execute if falling_block didn't land on anything, and is at the bottom of the screen 
+        #         if falling_block.y() == H - 50: 
+        #             store_constituents(falling_block, block_const)      # Store the constituent blocks of falling block 
+        #             falling_block = gen_block(W)                        # Create a falling_block 
+        #             game_blocks.append(falling_block)                   # Add it to the list of game_blocks 
 
-        # Execute if we've only generated one block in the game 
+        # Execute if only one block has been generated so far
         else: 
             if falling_block.y() == H - 50: 
                 store_constituents(falling_block, block_const)      # Store the constituent blocks of falling block 
                 falling_block = gen_block(W)                        # Create a falling_block 
                 game_blocks.append(falling_block)                   # Add it to the list of game_blocks
-        print(block_const)
 
         # Move 'falling_block' down
         # - - - - - - - - - - - - 
@@ -117,9 +115,6 @@ def testBlock():
     pygame.quit() 
 
 def collision(block_a, block_b): 
-
-    print('falln sprte', block_a, '\t', block_a.bottom())
-    print('exstn sprte', block_b, '\t', block_b.top(), '\n')
 
     if block_a.bottom() == block_b.top() and block_a.x == block_b.x:
         return True

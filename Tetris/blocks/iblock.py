@@ -1,7 +1,7 @@
 from basicblock import BasicBlock
 from blockattributes import * 
-import pygame
 
+from pygame.sprite import Group 
 
 class IBlock: 
     """ The 'I' shape """
@@ -13,7 +13,7 @@ class IBlock:
         self.blocks      = None         # Store all the blocks / used for iteration 
         self.ref_block   = None         # Reference block used when changing orientation
 
-        self.group        = Group()     # Use to test for collision
+        self.group       = Group()      # Use to test for collision
 
         # Index for the iterator
         self.index = 0 
@@ -42,22 +42,22 @@ class IBlock:
         if self.orientation == Orientation.UP: 
             # if self.ref_block.x > 0: 
             for block in self.blocks: 
-                block.x -= 50
+                block.rect.move_ip(-50, 0)
     
         if self.orientation == Orientation.RIGHT: 
             # if self.ref_block.x > 0: 
             for block in self.blocks: 
-                block.x -= 50
+                block.rect.move_ip(-50, 0)
 
         if self.orientation == Orientation.DOWN:
             # if self.ref_block.x > 150: 
             for block in self.blocks: 
-                block.x -= 50
+                block.rect.move_ip(-50, 0)
         
         if self.orientation == Orientation.LEFT: 
             # if self.ref_block.x > 0: 
             for block in self.blocks: 
-                block.x -= 50           
+                block.rect.move_ip(-50, 0)
         
     def goRight(self): 
         """ Used to move the block right """ 
@@ -65,29 +65,29 @@ class IBlock:
         if self.orientation == Orientation.UP: 
             # if self.ref_block.x < 300: 
             for block in self.blocks: 
-                block.x += 50
+                block.rect.move_ip(50, 0)
     
         if self.orientation == Orientation.RIGHT: 
             # if self.ref_block.x < 450: 
             for block in self.blocks: 
-                block.x += 50
+                block.rect.move_ip(50, 0)
 
         if self.orientation == Orientation.DOWN:
             # if self.ref_block.x < 450: 
             for block in self.blocks: 
-                block.x += 50
+                block.rect.move_ip(50, 0)
         
         if self.orientation == Orientation.LEFT: 
             # if self.ref_block.x < 450: 
             for block in self.blocks: 
-                block.x += 50                
+                block.rect.move_ip(50, 0)
  
     def goDown(self): 
         """ Used internally to control natural descent of block """   
         
         for block in self.blocks: 
-            block.y += 50
-    
+            block.rect.move_ip(0, 50)
+
     def speedUp(self): 
         """ Used when the user wants the block to descend faster """
         pass 
@@ -101,8 +101,9 @@ class IBlock:
             i = 1
             for block in self.blocks: 
                 if block is self.ref_block: 
-                    block.x += 100
-                    block.y -= 50
+                    block.x += 100 
+                    block.y -= 50 
+                    
                 else: 
                     block.x = self.ref_block.x
                     block.y = self.ref_block.y + 50 * i

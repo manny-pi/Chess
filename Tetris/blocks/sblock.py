@@ -1,6 +1,8 @@
 from basicblock import BasicBlock
 from blockattributes import * 
 
+from pygame.sprite import Group 
+
 class SBlock: 
     """ The 'snake-like' shape """
 

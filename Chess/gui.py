@@ -1,17 +1,33 @@
-import pygame 
-from board import Board 
+import pygame
+import pygame.mouse
+
+from board import *
+from piece import * 
 
 
-pygame.init() 
+WIDTH = HEIGHT = 600 
+GAME_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT), display=0)
+
+
+board = Board() 
+activeTile = None
 
 def run(): 
-    WIDTH, HEIGHT = 560, 560 
-    GAME_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT), display=0)
 
-    board = Board() 
-    
     running = True
     while running:  
+
+        for event in pygame.event.get(): 
+            if event.type == pygame.QUIT: 
+                running = False 
+
+            elif event.type == pygame.MOUSEBUTTONUP:
+                x, y = pygame.mouse.get_pos() 
+                board.selectTile(x, y)
+
+        for tile in board: 
+            GAME_WINDOW.blit(tile.surface, tile.rect) 
+
 
         pygame.display.flip() 
     pygame.quit() 

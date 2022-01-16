@@ -12,7 +12,7 @@ from pygame import mouse
 def testBlock(): 
 
     # Initialize pygame 
-    pygame.init() 
+    pygame.init()  
 
     # Set game dimensions 
     W, H = 500, 600
@@ -37,17 +37,16 @@ def testBlock():
             if event.type == pygame.QUIT: 
                 running = False
 
-            # Execute if the user left-clicks the mouse 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                iblock.changeOrientation()  
-                print(iblock)
-
             elif event.type == pygame.KEYDOWN: 
                 if event.key == pygame.K_a: 
+                    print("Go left")
                     iblock.goLeft() 
 
-                elif event.key == pygame.K_d:
+                elif event.key == pygame.K_f:
                     iblock.goRight() 
+
+                elif event.key == pygame.K_SPACE: 
+                    iblock.changeOrientation() 
 
         # Move the block down 
         # - - - - - - - - - -   
@@ -60,7 +59,7 @@ def testBlock():
         # Render graphics 
         # - - - - - - - - - - 
         for block in iblock:                                     # Render IBlock graphic
-            WINDOW.blit(block.surface, (block.x, block.y))
+            WINDOW.blit(block.surface, block.rect)
         
         # Update the frame 
         pygame.display.flip() 
