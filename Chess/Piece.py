@@ -17,6 +17,9 @@ class Team(enum.Enum):
     BLACK = enum.auto() 
     WHITE = enum.auto() 
 
+    def __repr__(self): 
+        self.name 
+
 
 class Piece(Sprite): 
 
@@ -25,7 +28,7 @@ class Piece(Sprite):
         if filepath is not None: 
             self.image = pygame.image.load(filepath).convert_alpha() 
         else: 
-            self.image = getLetter(s)
+            self.image = getLetter(s) 
         self.image = pygame.transform.scale(self.image, (75, 75))
 
         self.key = key 
@@ -34,6 +37,14 @@ class Piece(Sprite):
         
         self.team = team 
 
+    def __str__(self):
+        n = self.name 
+        k = self.key 
+        t = f'{self.key[1].name}:{self.key[0].name}'
+        p = self.pos 
+
+        return f'Piece(name={n}, key={k}, tileOn={t} pos={p})'
+
 
 class Pawn(Piece): 
 
@@ -41,6 +52,7 @@ class Pawn(Piece):
         super().__init__(name="Pawn", filepath=None, key=key, pos=pos, s="P", team=team)
         
     def advance(self): 
+        """ Moves the pawn """
         pass
         
 

@@ -6,6 +6,7 @@ from math import floor
 
 from piece import * 
 
+
 class Number(Enum): 
     EIGHT   = 0 
     SEVEN   = 1
@@ -36,7 +37,7 @@ class Letter(Enum):
 
 class Tile(Sprite): 
 
-    def __init__(self, name="tile", color='B', key=(Number.ONE, Letter.A), pos=(0, 0)): 
+    def __init__(self, name="tile", color='B', key=(Number.ONE, Letter.A), pos=()): 
         super().__init__() 
 
         self.name = name    # String name of the tile 
@@ -53,15 +54,14 @@ class Tile(Sprite):
 
         self.isActive = False
 
-        self.pieceHolding = None
+        self.pieceHolding: Piece = None
+
+        self.surface.blit(self.__tag(), self.rect)
         
     def pieceHolding(self): 
         """ Returns the piece that's on the tile """
 
         return self.pieceHolding 
-
-    def setPosition(self, left, top): 
-        self.rect.update((left, top), (75, 75))
 
     def activate(self): 
         self.isActive = True 
@@ -78,18 +78,38 @@ class Tile(Sprite):
             self.surface.blit(self.pieceHolding.image, self.pieceHolding.rect)
 
     def holdPiece(self, piece): 
+        """ Sets the piece that's on this tile """
+
         self.pieceHolding = piece
         self.surface.blit(piece.image, piece.rect)
  
+    def __tag(self): 
+        n = self.name 
+        c = self.color 
+        k = self.key 
+        s = self.pos 
+
+        img = SysFont(None, 10)
+        img = img.render(f"{n}\n{c}\n{k}\n{s}\n", True, (255, 0, 0))
+    
+        return img 
+    
     def __repr__(self): 
-        return f'Tile(name={self.name}, key={self.key}, color={self.color}, pos={self.pos})'
+        n = self.name 
+        k = self.key 
+        ph = self.pieceHolding.name if self.pieceHolding is not None else None
+        phC = self.pieceHolding.team.name if self.pieceHolding is not None else ''
+        c = self.color 
+        p = self.pos
+
+        return f'Tile(n={n}, k={k}, piece={ph}|{phC}, c={c}, pos={p})'
     
 
 class Board: 
 
     def __init__(self): 
 
-        self.boardMatrix = [[] for i in range(8)]
+        self.boardMatrix: List[List[Tile]] = [[] for i in range(8)]
         self.pieces = []
 
         self.isActive = False 
@@ -135,9 +155,8 @@ class Board:
             self.isActive = True 
             self.activeTile = selectedTile
 
-        print(f'{self.activeTile} is active')
+        print(f'Active Tile: {self.activeTile}')
         
-            
     def __updateBoard(self): 
         """ Adjust the locations of pieces on the board """ 
 
@@ -153,11 +172,12 @@ class Board:
         for n in Number:
             self.col = 0
             for l in Letter: 
+                name = f'{l.name}:{n.name}'
                 color = 'B' if colorPicker % 2 == 0 else 'W'
+
                 x = 75 * self.col
                 y = 75 * self.row 
 
-                name = f'{l.name}:{n.name}'
                 key = (n, l) 
                 pos = (x, y) 
 
@@ -173,19 +193,23 @@ class Board:
     def __generatePieces(self): 
         """ Initializes the game pieces on the board """
         
-        tileKey = (Number.EIGHT.value, Letter.B.value)
-        tile, tilePos = self.__getTile(tileKey)
+        # tileKey = (Number.EIGHT, Letter.A)
+        # tile, tilePos = self.__getTile(tileKey)
 
-        pawn = Pawn(key=tileKey, pos=tilePos, team=Team.WHITE)
-        tile.holdPiece(pawn) 
+        # pawn = Pawn(key=tileKey, pos=tilePos, team=Team.WHITE)!``
+        # tile.holdPiece(pawn) 
 
     def __getTile(self, key=()): 
         """ Returns the tile and its actual position """
 
         kNum, kLetter = key                     # Unpack the row and column values
+
+        kNum = kNum.value
+        kLetter = kLetter.value 
+
         tile = self.boardMatrix[kNum][kLetter]  # Get the tile from the boardMatrix
         tilePos = tile.pos                      # Get the position of the tile 
-        
+
         return tile, tilePos
 
     def __iter__(self):
