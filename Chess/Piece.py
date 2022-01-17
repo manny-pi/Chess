@@ -13,7 +13,8 @@ pygame.font.init()
 import enum
 
 
-class Team(enum.Enum):                                                                                                                                              
+class Team(enum.Enum):           
+                                                                                                                                       
     BLACK = enum.auto() 
     WHITE = enum.auto() 
 
@@ -23,33 +24,46 @@ class Team(enum.Enum):
 
 class Piece(Sprite): 
 
-    def __init__(self, name="Piece", filepath=None, key=(), pos=(), s="x", team=None):
+    def __init__(self, name="Piece", filepath=None, key=(), s="Letter-Name", team=None):
+        super().__init__() 
+
         self.name = name 
+        self.team  = team 
+
         if filepath is not None: 
             self.image = pygame.image.load(filepath).convert_alpha() 
         else: 
-            self.image = getLetter(s) 
+            self.image = self.__getLetter(s) 
+
         self.image = pygame.transform.scale(self.image, (75, 75))
+        self.key   = key
+        self.rect  = self.image.get_rect(topleft=(0, 0))
 
-        self.key = key 
-        self.pos = pos 
-        self.rect = self.image.get_rect(topleft=self.pos)
+    def __getLetter(self, s):
+        """ Returns a surface object with the given letter drawn on it """
+
+        color =  (0, 255, 0) if self.team == Team.WHITE else (255, 0, 0)
+        img = SysFont(None, 30)
+        img = img.render(f"{s}", True, color)
         
-        self.team = team 
+        return img
 
-    def __str__(self):
+    def __repr__(self):
         n = self.name 
         k = self.key 
-        t = f'{self.key[1].name}:{self.key[0].name}'
-        p = self.pos 
 
-        return f'Piece(name={n}, key={k}, tileOn={t} pos={p})'
+        kNum, kLetter = self.key 
+        kNum = kNum.name 
+        kLetter = kLetter.name
+        t = f'{kLetter}:{kNum}'
+
+        return f'Piece(name={n}, key={k}, tileOn={t})'
 
 
 class Pawn(Piece): 
 
-    def __init__(self, key=(), pos=(), team=Team.WHITE): 
-        super().__init__(name="Pawn", filepath=None, key=key, pos=pos, s="P", team=team)
+    def __init__(self, key=(), team=Team.WHITE): 
+        super().__init__(name="Pawn", filepath=None, key=key, s="P", team=team)
         
     def advance(self): 
         """ Moves the pawn """
@@ -58,18 +72,28 @@ class Pawn(Piece):
 
 class Rook(Piece): 
 
-    def __init__(self, pos=(), team=Team.WHITE): 
-        super().__init__(name="Rook", filepath=None, pos=pos, s="R", team=team)
+    def __init__(self, key=(), team=Team.WHITE): 
+        super().__init__(name="Rook", filepath=None, s="R", team=team)
 
 
-def getLetter(s, team=Team.WHITE):
-    """ Returns a surface object with the given letter drawn on it """
-
-    color =  (0, 255, 0) if team == Team.WHITE else (255, 0, 0)
-    img = SysFont(None, 30)
-    img = img.render(f"{s}", True, color)
+class Knight(Piece): 
+    def __init__(self, key=(), team=Team.WHITE): 
+        super().__init__(name="Rook", filepath=None, s="K", team=team)
     
-    return img
+
+class Bishop(Piece): 
+    def __init__(self, key=(), team=Team.WHITE): 
+        super().__init__(name="Rook", filepath=None, s="B", team=team)
+    
+
+class Queen(Piece): 
+    def __init__(self, key=(), team=Team.WHITE): 
+        super().__init__(name="Rook", filepath=None, s="Q", team=team)
+
+    
+class King(Piece): 
+    def __init__(self, key=(), team=Team.WHITE): 
+        super().__init__(name="King", filepath=None, s="1", team=team)
 
 
 if __name__ == '__main__': 

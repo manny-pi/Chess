@@ -8,6 +8,7 @@ from piece import *
 
 
 class Number(Enum): 
+
     EIGHT   = 0 
     SEVEN   = 1
     SIX     = 2
@@ -22,6 +23,7 @@ class Number(Enum):
 
 
 class Letter(Enum): 
+
     A = 0
     B = 1
     C = 2
@@ -46,7 +48,7 @@ class Tile(Sprite):
         self.color = color 
         self.colorTuple = (0, 0, 0) if color == 'B' else (255, 255, 255)
 
-        self.surface  = Surface((75, 75))
+        self.surface = Surface((75, 75))
         self.surface.fill(self.colorTuple)
 
         self.pos = pos 
@@ -56,44 +58,32 @@ class Tile(Sprite):
 
         self.pieceHolding: Piece = None
 
-        self.surface.blit(self.__tag(), self.rect)
-        
     def pieceHolding(self): 
         """ Returns the piece that's on the tile """
 
         return self.pieceHolding 
 
+    def holdPiece(self, piece): 
+        """ Sets the piece that's on this tile """
+
+        self.pieceHolding = piece
+        self.surface.blit(self.pieceHolding.image, self.pieceHolding.rect)
+ 
     def activate(self): 
         self.isActive = True 
         self.surface.fill((0, 0, 255))
         
         if self.pieceHolding: 
-            self.surface.blit(self.pieceHolding.image, self.pieceHolding.rect)
+            self.surface.blit(self.pieceHolding.image, (0, 0))
         
     def deactivate(self): 
         self.isActive = False
         self.surface.fill(self.colorTuple)
         
         if self.pieceHolding: 
-            self.surface.blit(self.pieceHolding.image, self.pieceHolding.rect)
+            self.surface.blit(self.pieceHolding.image, (0, 0))
 
-    def holdPiece(self, piece): 
-        """ Sets the piece that's on this tile """
 
-        self.pieceHolding = piece
-        self.surface.blit(piece.image, piece.rect)
- 
-    def __tag(self): 
-        n = self.name 
-        c = self.color 
-        k = self.key 
-        s = self.pos 
-
-        img = SysFont(None, 10)
-        img = img.render(f"{n}\n{c}\n{k}\n{s}\n", True, (255, 0, 0))
-    
-        return img 
-    
     def __repr__(self): 
         n = self.name 
         k = self.key 
@@ -158,7 +148,7 @@ class Board:
         print(f'Active Tile: {self.activeTile}')
         
     def __updateBoard(self): 
-        """ Adjust the locations of pieces on the board """ 
+        """ Adjust the locations of pieces on the board during the game """ 
 
         if self.isActive: 
             self.isActive = False 
@@ -191,28 +181,103 @@ class Board:
         self.row = self.col = 0   # Reset for iteration 
 
     def __generatePieces(self): 
-        """ Initializes the game pieces on the board """
+        """ Generates and initializes the chess pieces on the board """
         
-        # tileKey = (Number.EIGHT, Letter.A)
-        # tile, tilePos = self.__getTile(tileKey)
+        self.__generatePawns()
+        self.__generateRooks()
+        self.__generateKnights()
+        self.__generateBishops()
+        self.__generateQueens()
+        self.__generateKings()
 
-        # pawn = Pawn(key=tileKey, pos=tilePos, team=Team.WHITE)!``
-        # tile.holdPiece(pawn) 
+    def __generatePawns(self): 
+        """ Generate and initialize the pawns for the game """ 
+        
+        kNums = (Number.TWO, Number.SEVEN) 
+        for kNum in kNums: 
+            for kLetter in Letter: 
+                tileKey = (kNum, kLetter)
+                tile = self.__getTile(tileKey)
+                team = Team.WHITE if kNum is Number.TWO else Team.BLACK
+                pawn = Pawn(key=tileKey, team=team)
+                tile.holdPiece(pawn)
 
-    def __getTile(self, key=()): 
-        """ Returns the tile and its actual position """
+    def __generateRooks(self): 
+        """ Generate and initialize the rooks for the game """ 
+
+        kNums = (Number.ONE, Number.EIGHT)
+        kLetters = (Letter.A, Letter.H)
+        for kNum in kNums: 
+            for kLetter in kLetters: 
+                tileKey = (kNum, kLetter)
+                tile = self.__getTile(tileKey)      
+                team = Team.WHITE if kNum is Number.ONE else Team.BLACK
+                rook = Rook(key=tileKey, team=Team.BLACK)
+                tile.holdPiece(rook)
+
+    def __generateKnights(self):
+        """ Generate and initialize the knights for the game """
+
+        kNums = (Number.ONE, Number.EIGHT)
+        kLetters = (Letter.B, Letter.G)
+        for kNum in kNums: 
+            for kLetter in kLetters: 
+                tileKey = (kNum, kLetter)
+                tile = self.__getTile(tileKey)      
+                team = Team.WHITE if kNum is Number.ONE else Team.BLACK
+                knight = Knight(key=tileKey, team=Team.BLACK)
+                tile.holdPiece(knight)
+
+    def __generateBishops(self): 
+        """ Generate and initialize the bishops for the game """ 
+
+        kNums = (Number.ONE, Number.EIGHT)
+        kLetters = (Letter.C, Letter.F)
+        for kNum in kNums: 
+            for kLetter in kLetters: 
+                tileKey = (kNum, kLetter)
+                tile = self.__getTile(tileKey)      
+                team = Team.WHITE if kNum is Number.ONE else Team.BLACK
+                knight = Bishop(key=tileKey, team=Team.BLACK)
+                tile.holdPiece(knight)
+
+    def __generateKings(self): 
+        """ Generate and initialize the kings for the game """ 
+
+        kNums = (Number.ONE, Number.EIGHT)
+        kLetter = Letter.E
+        for kNum in kNums: 
+            tileKey = (kNum, kLetter)
+            tile = self.__getTile(tileKey)      
+            team = Team.WHITE if kNum is Number.ONE else Team.BLACK
+            knight = Bishop(key=tileKey, team=Team.BLACK)
+            tile.holdPiece(knight)        
+
+    def __generateQueens(self): 
+        """ Generate and initialize the queens for the game """
+
+        kNums = (Number.ONE, Number.EIGHT)
+        kLetter = Letter.D
+        for kNum in kNums: 
+            tileKey = (kNum, kLetter)
+            tile = self.__getTile(tileKey)      
+            team = Team.WHITE if kNum is Number.ONE else Team.BLACK
+            knight = Bishop(key=tileKey, team=Team.BLACK)
+            tile.holdPiece(knight)       
+
+    def __getTile(self, key=()) -> Tile: 
+        """ Returns a tile with key=key """
 
         kNum, kLetter = key                     # Unpack the row and column values
-
+        
         kNum = kNum.value
         kLetter = kLetter.value 
 
         tile = self.boardMatrix[kNum][kLetter]  # Get the tile from the boardMatrix
-        tilePos = tile.pos                      # Get the position of the tile 
 
-        return tile, tilePos
+        return tile
 
-    def __iter__(self):
+    def __iter__(self) -> Tile:
         return self 
 
     def __next__(self): 
