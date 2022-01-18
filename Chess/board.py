@@ -151,6 +151,7 @@ class Board:
                     # Deactivate activeTile 
                     self.activeTile.deactivate() 
                     self.activeTile = None 
+                    self.hasActiveTile = False
 
                 # Execute if activeTile isn't holding a piece / Deactivate activeTile
                 else: 
@@ -162,7 +163,7 @@ class Board:
                     selectedTile.activate()
                     self.activeTile = selectedTile
             
-        # Execute if there is no active tile on the board / Activate selectedTile 
+        # Execute if there is no active tile / Activate selectedTile 
         elif not self.hasActiveTile: 
 
             # Activate selectedTile  
