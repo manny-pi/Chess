@@ -352,7 +352,6 @@ class Board:
         # Execute if Pawn is moving one step vertically or diagonally / Pawn is advancing or attacking
         if singleStep: 
 
-
             # ADVANCING 
             # - - - - - - - - - - - - - - - - - - - - - - - - 
             # Execute if Pawn is advancing (not attacking) / Pawn is moving vertically
@@ -446,7 +445,7 @@ class Board:
         # Execute if the Rook is moving vertically 
         if moveVertically: 
 
-            # Check if the piecde can move vertically 
+            # Check if the Rook can move vertically 
             if self.__rookCanMoveVert(rook, numFrom=sKNum, numTo=tKNum, letter=sKLetter): 
                 targetIsEmpty = targetTile.pieceHolding == None 
                 
@@ -462,9 +461,6 @@ class Board:
         # Execute if the Rook is moving horizontally 
         if moveHorizontally: 
 
-            # Calculate the number of tiles between source and target along the row 
-            tilesBetweenH = abs(tKLetter - sKLetter)
-
             pass 
 
     def __rookCanMoveVert(self, rook: Rook, numFrom=None, numTo=None, letter=None) -> bool: 
@@ -474,33 +470,40 @@ class Board:
         for num in Number: 
             if checkTile: 
 
-                # Execute if there's a piece between the source tile and target tile
-                if self.boardMatrix[num][letter].pieceHolding is not None: 
+                # Execute if a piece was found between the rows 
+                piece = self.boardMatrix[num][letter].pieceHolding
+                if piece is not None: 
                     
-                    # Execute if the piece is at target tile
-                    pieceAtTarget = num is numTo
-                    if pieceAtTarget: 
-                        
-                        # Execute if the piece is an enemy 
-                        if self.boardMatrix[num][letter].pieceHolding.team != rook.team: 
-                            return True 
+                    # Execute if the piece is at the target tile
+                    atTarget = num is numTo
+                    if atTarget: 
 
-                        # Execute if the piece is an ally 
+                        # Execute if the piece is an enemy piece / Return True / Rook can move there 
+                        if piece.team is not rook.team: 
+                            return True 
+                        
+                        # Execute if the piece is the same team as the Rook / Rook can't move there 
                         else: 
-                            return False   
-                    
+                            return False
+
+                    # Execute if the piece is not at the target tile / The piece is before the target tile 
                     else: 
                         return False 
 
+            # Execute if we've processed this row 
             if num is numFrom: 
                 checkTile = True 
 
+            # Execute if we've reached the targetTile 
             if num is numTo: 
                 checkTile = False 
                 break 
+
+        return True 
             
     def __rookCanMoveHor(rook: Rook, colFrom=None, colTo=None, row=None) -> bool: 
         """ Check wether or not rook can move horizontally. Returns True if it can """
+        
         pass 
 
     # Knight methods 
