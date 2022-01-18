@@ -328,6 +328,7 @@ class Board:
         elif isinstance(piece, King): 
             self.__moveKing(targetTile) 
 
+    # Pawn methods 
     def __movePawn(self, targetTile): 
         """ Moves the Pawn from source to target if possible""" 
 
@@ -343,8 +344,8 @@ class Board:
         doubleStep = abs(tKNum - sKNum) == 2
         canDoubleStep = pawn.canDoubleStep()
 
-        movingVertically = tKLetter == sKLetter
-        movingDiagonally = abs(tKLetter - sKLetter) >= 1
+        moveVertically = tKLetter == sKLetter
+        moveDiagonally = abs(tKLetter - sKLetter) >= 1
 
         targetIsEmpty = targetTile.pieceHolding == None 
 
@@ -355,7 +356,7 @@ class Board:
             # ADVANCING 
             # - - - - - - - - - - - - - - - - - - - - - - - - 
             # Execute if Pawn is advancing (not attacking) / Pawn is moving vertically
-            if movingVertically: 
+            if moveVertically: 
 
                 # Execute if there's no piece at targetTile / Advance Pawn
                 if targetIsEmpty: 
@@ -379,7 +380,7 @@ class Board:
             # ATTACKING 
             # - - - - - - - - - - - - - - - - - - - - - - - - 
             # Execute if Pawn is attacking / Pawn is moving diagonally
-            elif movingDiagonally: 
+            elif moveDiagonally: 
 
                 # Execute if there's a piece at targetTile / Attack Enemy
                 if not targetIsEmpty:
@@ -427,6 +428,7 @@ class Board:
             # This Pawn can only take one step at a time now 
             pawn.singleStep()
 
+    # Rook methods 
     def __moveRook(self, targetTile): 
         """ Moves the Rook from source to target if possible """ 
 
@@ -438,21 +440,88 @@ class Board:
         targetKey = targetTile.key
         tKNum, tKLetter = targetKey
 
+        moveVertically = tKLetter == sKLetter
+        moveHorizontally = tKLetter == sKLetter
+
+        # Execute if the Rook is moving vertically 
+        if moveVertically: 
+
+            # Check if the piecde can move vertically 
+            if self.__rookCanMoveVert(rook, numFrom=sKNum, numTo=tKNum, letter=sKLetter): 
+                targetIsEmpty = targetTile.pieceHolding == None 
+                
+                if targetIsEmpty: 
+                    targetTile.holdPiece(rook)
+                    self.activeTile.disposePiece()
+
+                else:  
+                    targetTile.disposePiece() 
+                    targetTile.holdPiece(rook)
+                    self.activeTile.disposePiece()
+            
+        # Execute if the Rook is moving horizontally 
+        if moveHorizontally: 
+
+            # Calculate the number of tiles between source and target along the row 
+            tilesBetweenH = abs(tKLetter - sKLetter)
+
+            pass 
+
+    def __rookCanMoveVert(self, rook: Rook, numFrom=None, numTo=None, letter=None) -> bool: 
+        """ Check wether or not rook can move vertically. Returns True if it can """
+
+        checkTile = False 
+        for num in Number: 
+            if checkTile: 
+
+                # Execute if there's a piece between the source tile and target tile
+                if self.boardMatrix[num][letter].pieceHolding is not None: 
+                    
+                    # Execute if the piece is at target tile
+                    pieceAtTarget = num is numTo
+                    if pieceAtTarget: 
+                        
+                        # Execute if the piece is an enemy 
+                        if self.boardMatrix[num][letter].pieceHolding.team != rook.team: 
+                            return True 
+
+                        # Execute if the piece is an ally 
+                        else: 
+                            return False   
+                    
+                    else: 
+                        return False 
+
+            if num is numFrom: 
+                checkTile = True 
+
+            if num is numTo: 
+                checkTile = False 
+                break 
+            
+    def __rookCanMoveHor(rook: Rook, colFrom=None, colTo=None, row=None) -> bool: 
+        """ Check wether or not rook can move horizontally. Returns True if it can """
+        pass 
+
+    # Knight methods 
     def __moveKnight(self, sourceTile, targetTile) -> bool: 
         """ Moves the Knight from source to target. Returns true if the move is legal """ 
 
         pass 
 
+    # Bishop methods 
     def __moveBishop(self, sourceTile, targetTile) -> bool: 
         """ Moves the Bishop from source to target. Returns true if the move is legal """ 
 
         pass 
 
+    # Queen methods 
     def __moveQueen(self, sourceTile, targetTile) -> bool: 
         """ Moves the Queen from source to target. Returns true if the move is legal """ 
 
         pass 
 
+    # King methods 
     def __moveKing(self, sourceTile, targetTile) -> bool: 
         """ Moves the King from source to target. Returns true if the move is legal """ 
 

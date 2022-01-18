@@ -27,9 +27,6 @@ def run():
 
         for tile in board: 
             GAME_WINDOW.blit(tile.surface, tile.rect) 
-        # tile.surface.blit(pawn.image, pawn.rect)
-        # GAME_WINDOW.blit(tile.surface, tile.pos)
-
 
         pygame.display.flip() 
     pygame.quit() 
