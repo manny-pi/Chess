@@ -10,9 +10,6 @@ WIDTH = HEIGHT = 600
 GAME_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT), display=0)
 
 board = Board()
-pawn = Pawn(key=(Number.THREE, Letter.A))
-board.boardMatrix[Number.THREE.value][Letter.A.value].holdPiece(pawn)
-
 def run(): 
 
     running = True

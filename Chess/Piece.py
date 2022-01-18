@@ -31,13 +31,25 @@ class Piece(Sprite):
         self.team  = team 
 
         if filepath is not None: 
-            self.image = pygame.image.load(filepath).convert_alpha() 
+            self.image: pygame.Surface = pygame.image.load(filepath).convert_alpha() 
+            
         else: 
             self.image = self.__getLetter(s) 
 
         self.image = pygame.transform.scale(self.image, (75, 75))
         self.key   = key
         self.rect  = self.image.get_rect(topleft=(0, 0))
+        self.doubleStep = True 
+
+    def canDoubleStep(self) -> bool: 
+        """ Returns True if this Pawn can make a 'double step' """ 
+
+        return self.doubleStep
+
+    def singleStep(self): 
+        """ Sets double step to False, so this Pawn only moves one step at a time """ 
+
+        self.doubleStep = False 
 
     def __getLetter(self, s):
         """ Returns a surface object with the given letter drawn on it """

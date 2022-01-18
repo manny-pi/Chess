@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['gui.py'],
-             pathex=['/Users/Omani/Desktop/Personal/Education/Computer Science/Python/Python Projects/PyGame-Projects/Snake'],
+             pathex=[],
              binaries=[],
              datas=[],
              hiddenimports=[],

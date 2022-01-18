@@ -329,7 +329,7 @@ class Board:
             self.__moveKing(targetTile) 
 
     def __movePawn(self, targetTile): 
-        """ Moves the Pawn from source to target. Returns true if the move is legal """ 
+        """ Moves the Pawn from source to target if possible""" 
 
         pawn = self.activeTile.pieceHolding 
 
@@ -339,26 +339,54 @@ class Board:
         targetKey = targetTile.key
         tKNum, tKLetter = targetKey
 
-        # Execute if the Pawn is WHITE
-        if pawn.team is Team.WHITE: 
+        singleStep = abs(tKNum - sKNum) == 1
+        doubleStep = abs(tKNum - sKNum) == 2
+        canDoubleStep = pawn.canDoubleStep()
 
-            # Execute if targetTile is taking one step forward or diagonally
-            if tKNum - sKNum == 1: 
+        movingVertically = tKLetter == sKLetter
+        movingDiagonally = abs(tKLetter - sKLetter) >= 1
 
-                # Execute if Pawn is advancing (not attacking)
-                if tKLetter == sKLetter: 
+        targetIsEmpty = targetTile.pieceHolding == None 
 
-                    # Execute if there's no piece at targetTile / Advance Pawn
-                    if not targetTile.pieceHolding: 
+        # Execute if Pawn is moving one step vertically or diagonally / Pawn is advancing or attacking
+        if singleStep: 
+
+
+            # ADVANCING 
+            # - - - - - - - - - - - - - - - - - - - - - - - - 
+            # Execute if Pawn is advancing (not attacking) / Pawn is moving vertically
+            if movingVertically: 
+
+                # Execute if there's no piece at targetTile / Advance Pawn
+                if targetIsEmpty: 
+
+                    # Execute if Pawn is White / White Pawn can only move UP vertically 
+                    goingUp = tKNum - sKNum == 1
+                    if pawn.team == Team.WHITE and goingUp:
                         targetTile.holdPiece(pawn)
                         self.activeTile.disposePiece()
-                
-                # Execute if Pawn is attacking 
-                if abs(tKLetter - sKLetter) == 1: 
 
-                    # Execute if targetTile is holding an enemy piece
-                    pieceAtTarget = targetTile.pieceHolding 
-                    if pieceAtTarget.team is Team.BLACK: 
+                        pawn.singleStep()
+
+                    # Execute if Pawn is Black / Black Pawn can only move DOWN vertically
+                    elif pawn.team == Team.BLACK and not goingUp: 
+                        targetTile.holdPiece(pawn) 
+                        self.activeTile.disposePiece() 
+
+                        # This Pawn can only take one step at a time now 
+                        pawn.singleStep()
+                
+            # ATTACKING 
+            # - - - - - - - - - - - - - - - - - - - - - - - - 
+            # Execute if Pawn is attacking / Pawn is moving diagonally
+            elif movingDiagonally: 
+
+                # Execute if there's a piece at targetTile / Attack Enemy
+                if not targetIsEmpty:
+
+                    # Execute if Pawn is White and targetTile has a Black piece
+                    whiteCanAttack = pawn.team is Team.WHITE and targetTile.pieceHolding.team is Team.BLACK
+                    if whiteCanAttack: 
                         
                         # Move the Pawn to targetTile 
                         targetTile.disposePiece() 
@@ -367,20 +395,48 @@ class Board:
                         # Remove piece from activeTile
                         self.activeTile.disposePiece()
 
-            # Execute if target is one step forward 
-            if tKNum - sKNum == 2: 
+                        # This Pawn can only take one step at a time now 
+                        pawn.singleStep()
+
+                    # Execute if Pawn is Black and targetTile has a White piece 
+                    blackCanAttack = pawn.team is Team.BLACK and targetTile.pieceHolding.team is Team.WHITE
+                    if blackCanAttack: 
+
+                        # Move the Pawn to targetTile
+                        targetTile.disposePiece() 
+                        targetTile.holdPiece(pawn) 
+
+                        # Remove piece from activeTile
+                        self.activeTile.disposePiece()
+
+                        # This Pawn can only take one step at a time now 
+                        pawn.singleStep()
+
+        # Execute if Pawn is taking two steps forward vertically / Pawn is advancing two steps
+        if doubleStep and canDoubleStep:  
+            
+            # Execute if Pawn is White and can take two steps 
+            firstTileIsEmpty = self.__getTile(key=(tKNum, tKLetter)).pieceHolding == None 
+            whiteCanMove =  firstTileIsEmpty and targetIsEmpty
+            if whiteCanMove: 
+
+                # Move the Pawn to targetTile 
                 targetTile.holdPiece(pawn)
-                self.activeTile.holdPiece(None)
+                self.activeTile.disposePiece()
 
-                self.hasActiveTile = False 
-                self.activeTile = None 
+            # This Pawn can only take one step at a time now 
+            pawn.singleStep()
 
-            pass 
+    def __moveRook(self, targetTile): 
+        """ Moves the Rook from source to target if possible """ 
 
-    def __moveRook(self, sourceTile, targetTile) -> bool: 
-        """ Moves the Rook from source to target. Returns true if the move is legal """ 
+        rook = self.activeTile.pieceHolding
 
-        pass 
+        sourceKey = self.activeTile.key 
+        sKNum, sKLetter = sourceKey
+
+        targetKey = targetTile.key
+        tKNum, tKLetter = targetKey
 
     def __moveKnight(self, sourceTile, targetTile) -> bool: 
         """ Moves the Knight from source to target. Returns true if the move is legal """ 
