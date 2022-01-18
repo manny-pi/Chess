@@ -4,11 +4,14 @@ import pygame.mouse
 from board import *
 from piece import * 
 
+from math import floor 
 
 WIDTH = HEIGHT = 600 
 GAME_WINDOW = pygame.display.set_mode((WIDTH, HEIGHT), display=0)
 
 board = Board()
+pawn = Pawn(key=(Number.THREE, Letter.A))
+board.boardMatrix[Number.THREE.value][Letter.A.value].holdPiece(pawn)
 
 def run(): 
 
@@ -21,7 +24,9 @@ def run():
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 x, y = pygame.mouse.get_pos() 
-                board.selectTile(x, y)
+                kLetter = floor(x/75)
+                kNum = floor(y/75)
+                board.selectTile(key=(kNum, kLetter))
 
         for tile in board: 
             GAME_WINDOW.blit(tile.surface, tile.rect) 

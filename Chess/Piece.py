@@ -43,7 +43,7 @@ class Piece(Sprite):
         """ Returns a surface object with the given letter drawn on it """
 
         color =  (0, 255, 0) if self.team == Team.WHITE else (255, 0, 0)
-        img = SysFont(None, 30)
+        img = SysFont(None, 75)
         img = img.render(f"{s}", True, color)
         
         return img

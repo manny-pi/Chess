@@ -2,7 +2,6 @@ from pygame.sprite import Sprite, Group
 from pygame.surface import Surface 
 
 from enum import Enum
-from math import floor 
 
 from piece import * 
 
@@ -17,6 +16,9 @@ class Number(Enum):
     THREE   = 5 
     TWO     = 6 
     ONE     = 7 
+
+    def __sub__(self, other): 
+        return -(self.value - other.value) 
 
     def __repr__(self):
         return self.name
@@ -33,6 +35,9 @@ class Letter(Enum):
     G = 6
     H = 7
 
+    def __sub__(self, other):
+        return self.value - other.value 
+
     def __repr__(self):
         return self.name
 
@@ -45,7 +50,7 @@ class Tile(Sprite):
         self.name = name    # String name of the tile 
         self.key = key      # Key used to access board matrix 
      
-        self.color = color 
+        self.color = color  # String value of the color of the tile 
         self.colorTuple = (0, 0, 0) if color == 'B' else (255, 255, 255)
 
         self.surface = Surface((75, 75))
@@ -55,21 +60,25 @@ class Tile(Sprite):
         self.rect = self.surface.get_rect(topleft=self.pos)
 
         self.isActive = False
-
-        self.pieceHolding: Piece = None
-
-    def pieceHolding(self): 
-        """ Returns the piece that's on the tile """
-
-        return self.pieceHolding 
+        self.pieceHolding = None
 
     def holdPiece(self, piece): 
-        """ Sets the piece that's on this tile """
+        """ Set this tile to hold the piece """
 
         self.pieceHolding = piece
-        self.surface.blit(self.pieceHolding.image, self.pieceHolding.rect)
- 
+
+        if self.pieceHolding is not None:
+            self.surface.blit(self.pieceHolding.image, self.pieceHolding.rect)
+
+    def disposePiece(self):
+        """ Disposes the piece that is on this tile """ 
+
+        self.pieceHolding = None 
+        self.surface.fill(self.colorTuple)
+
     def activate(self): 
+        """ Highlight this tile blue to show its been selected """ 
+
         self.isActive = True 
         self.surface.fill((0, 0, 255))
         
@@ -77,12 +86,13 @@ class Tile(Sprite):
             self.surface.blit(self.pieceHolding.image, (0, 0))
         
     def deactivate(self): 
+        """ Remove highlight from this tile to show its been deselected """ 
+
         self.isActive = False
         self.surface.fill(self.colorTuple)
         
         if self.pieceHolding: 
             self.surface.blit(self.pieceHolding.image, (0, 0))
-
 
     def __repr__(self): 
         n = self.name 
@@ -102,8 +112,8 @@ class Board:
         self.boardMatrix: List[List[Tile]] = [[] for i in range(8)]
         self.pieces = []
 
-        self.isActive = False 
-        self.activeTile = None
+        self.hasActiveTile = False 
+        self.activeTile: Tile = None
 
         # Use for iteration 
         self.row = self.col = 0
@@ -111,38 +121,55 @@ class Board:
         self.__generateTiles()   # Initialize the board tiles
         self.__generatePieces()  # Initialize the game pieces 
 
-    def selectTile(self, x, y): 
-        """ Deactivates an active tile and/or activates the selected tile """ 
+    def selectTile(self, key=()): 
+        """ Selects or deselects a tile; Also used to move pieces around """ 
         
-        x = floor(x/75)
-        y = floor(y/75)
-        selectedTile = self.boardMatrix[y][x]
+        kNum, kLetter = key 
+        selectedTile = self.boardMatrix[kNum][kLetter]
         
-        # Execute if a different tile has already been selected on the board
-        if self.isActive: 
+        # Execute if a tile is already active 
+        if self.hasActiveTile: 
 
-            # Execute if active tile is also the currently selected tile 
-            if selectedTile.isActive: 
-                # Deactivatee the selected tile 
-                selectedTile.deactivate() 
+            # Execute if selectedTile is activeTile / Deselect selectedTile
+            if selectedTile is self.activeTile: 
 
-                self.isActive = False
-                self.activeTile = None
-
-            # Deactivate the tile that was already active 
-            elif not selectedTile.isActive: 
-                # Deactivate the currently active tile 
+                # Deactivate selectedTile 
                 self.activeTile.deactivate() 
 
-                # Activate the selected tile 
-                selectedTile.activate()
-                self.activeTile = selectedTile
+                self.hasActiveTile = False
+                self.activeTile = None
+
+            # Execute if selectedTile is not activeTile 
+            elif selectedTile is not self.activeTile: 
+                
+                # Execute if activeTile is holding a piece / Process the piece's move
+                if self.activeTile.pieceHolding: 
+                    
+                    # Move the piece from activeTile to selectedTile if possible 
+                    self.__movePiece(selectedTile)
+
+                    # Deactivate activeTile 
+                    self.activeTile.deactivate() 
+                    self.activeTile = None 
+
+                # Execute if activeTile isn't holding a piece / Deactivate activeTile
+                else: 
+
+                    # Deactivate the currently active tile 
+                    self.activeTile.deactivate() 
+
+                    # Activate the selected tile / Set selectedTile as activeTile 
+                    selectedTile.activate()
+                    self.activeTile = selectedTile
             
-        # Execute if there is no active tile on the board / Activate a tile 
-        elif not self.isActive: 
+        # Execute if there is no active tile on the board / Activate selectedTile 
+        elif not self.hasActiveTile: 
+
+            # Activate selectedTile  
             selectedTile.activate() 
 
-            self.isActive = True 
+            # Set selectedTile as activeTile 
+            self.hasActiveTile = True 
             self.activeTile = selectedTile
 
         print(f'Active Tile: {self.activeTile}')
@@ -150,10 +177,10 @@ class Board:
     def __updateBoard(self): 
         """ Adjust the locations of pieces on the board during the game """ 
 
-        if self.isActive: 
-            self.isActive = False 
+        if self.hasActiveTile: 
+            self.hasActiveTile = False 
         else: 
-            self.isActive = True 
+            self.hasActiveTile = True 
 
     def __generateTiles(self):
         """ Generates the tiles of the board """ 
@@ -212,7 +239,7 @@ class Board:
                 tileKey = (kNum, kLetter)
                 tile = self.__getTile(tileKey)      
                 team = Team.WHITE if kNum is Number.ONE else Team.BLACK
-                rook = Rook(key=tileKey, team=Team.BLACK)
+                rook = Rook(key=tileKey, team=team)
                 tile.holdPiece(rook)
 
     def __generateKnights(self):
@@ -225,7 +252,7 @@ class Board:
                 tileKey = (kNum, kLetter)
                 tile = self.__getTile(tileKey)      
                 team = Team.WHITE if kNum is Number.ONE else Team.BLACK
-                knight = Knight(key=tileKey, team=Team.BLACK)
+                knight = Knight(key=tileKey, team=team)
                 tile.holdPiece(knight)
 
     def __generateBishops(self): 
@@ -238,20 +265,8 @@ class Board:
                 tileKey = (kNum, kLetter)
                 tile = self.__getTile(tileKey)      
                 team = Team.WHITE if kNum is Number.ONE else Team.BLACK
-                knight = Bishop(key=tileKey, team=Team.BLACK)
+                knight = Bishop(key=tileKey, team=team)
                 tile.holdPiece(knight)
-
-    def __generateKings(self): 
-        """ Generate and initialize the kings for the game """ 
-
-        kNums = (Number.ONE, Number.EIGHT)
-        kLetter = Letter.E
-        for kNum in kNums: 
-            tileKey = (kNum, kLetter)
-            tile = self.__getTile(tileKey)      
-            team = Team.WHITE if kNum is Number.ONE else Team.BLACK
-            knight = Bishop(key=tileKey, team=Team.BLACK)
-            tile.holdPiece(knight)        
 
     def __generateQueens(self): 
         """ Generate and initialize the queens for the game """
@@ -262,8 +277,20 @@ class Board:
             tileKey = (kNum, kLetter)
             tile = self.__getTile(tileKey)      
             team = Team.WHITE if kNum is Number.ONE else Team.BLACK
-            knight = Bishop(key=tileKey, team=Team.BLACK)
+            knight = Queen(key=tileKey, team=team)
             tile.holdPiece(knight)       
+
+    def __generateKings(self): 
+        """ Generate and initialize the kings for the game """ 
+
+        kNums = (Number.ONE, Number.EIGHT)
+        kLetter = Letter.E
+        for kNum in kNums: 
+            tileKey = (kNum, kLetter)
+            tile = self.__getTile(tileKey)      
+            team = Team.WHITE if kNum is Number.ONE else Team.BLACK
+            knight = King(key=tileKey, team=team)
+            tile.holdPiece(knight)        
 
     def __getTile(self, key=()) -> Tile: 
         """ Returns a tile with key=key """
@@ -277,7 +304,104 @@ class Board:
 
         return tile
 
-    def __iter__(self) -> Tile:
+    def __movePiece(self, targetTile): 
+        """ Move the piece on activeTile to targetTile if possible """
+
+        piece = self.activeTile.pieceHolding 
+
+        if isinstance(piece, Pawn): 
+            self.__movePawn(targetTile)
+
+        elif isinstance(piece, Rook):
+            self.__moveRook(targetTile) 
+
+        elif isinstance(piece, Knight):
+            self.__moveRook(targetTile) 
+
+        elif isinstance(piece, Bishop):
+            self.__moveRook(targetTile) 
+
+        elif isinstance(piece, Queen): 
+            self.__moveQueen(targetTile)
+        
+        elif isinstance(piece, King): 
+            self.__moveKing(targetTile) 
+
+    def __movePawn(self, targetTile): 
+        """ Moves the Pawn from source to target. Returns true if the move is legal """ 
+
+        pawn = self.activeTile.pieceHolding 
+
+        sourceKey = self.activeTile.key 
+        sKNum, sKLetter = sourceKey
+
+        targetKey = targetTile.key
+        tKNum, tKLetter = targetKey
+
+        # Execute if the Pawn is WHITE
+        if pawn.team is Team.WHITE: 
+
+            # Execute if targetTile is taking one step forward or diagonally
+            if tKNum - sKNum == 1: 
+
+                # Execute if Pawn is advancing (not attacking)
+                if tKLetter == sKLetter: 
+
+                    # Execute if there's no piece at targetTile / Advance Pawn
+                    if not targetTile.pieceHolding: 
+                        targetTile.holdPiece(pawn)
+                        self.activeTile.disposePiece()
+                
+                # Execute if Pawn is attacking 
+                if abs(tKLetter - sKLetter) == 1: 
+
+                    # Execute if targetTile is holding an enemy piece
+                    pieceAtTarget = targetTile.pieceHolding 
+                    if pieceAtTarget.team is Team.BLACK: 
+                        
+                        # Move the Pawn to targetTile 
+                        targetTile.disposePiece() 
+                        targetTile.holdPiece(pawn) 
+
+                        # Remove piece from activeTile
+                        self.activeTile.disposePiece()
+
+            # Execute if target is one step forward 
+            if tKNum - sKNum == 2: 
+                targetTile.holdPiece(pawn)
+                self.activeTile.holdPiece(None)
+
+                self.hasActiveTile = False 
+                self.activeTile = None 
+
+            pass 
+
+    def __moveRook(self, sourceTile, targetTile) -> bool: 
+        """ Moves the Rook from source to target. Returns true if the move is legal """ 
+
+        pass 
+
+    def __moveKnight(self, sourceTile, targetTile) -> bool: 
+        """ Moves the Knight from source to target. Returns true if the move is legal """ 
+
+        pass 
+
+    def __moveBishop(self, sourceTile, targetTile) -> bool: 
+        """ Moves the Bishop from source to target. Returns true if the move is legal """ 
+
+        pass 
+
+    def __moveQueen(self, sourceTile, targetTile) -> bool: 
+        """ Moves the Queen from source to target. Returns true if the move is legal """ 
+
+        pass 
+
+    def __moveKing(self, sourceTile, targetTile) -> bool: 
+        """ Moves the King from source to target. Returns true if the move is legal """ 
+
+        pass 
+
+    def __iter__(self):
         return self 
 
     def __next__(self): 
