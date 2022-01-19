@@ -17,6 +17,16 @@ class Number(Enum):
     TWO     = 6 
     ONE     = 7 
 
+    def __lt__(self, other): 
+        """ Returns True if this Number is nominally greater than other """
+        
+        return self.value > other.value
+
+    def __gt__(self, other): 
+        """ Returns True if this Number is nominally less than other """
+
+        return self.value < other.value
+
     def __sub__(self, other): 
         return -(self.value - other.value) 
 
@@ -440,38 +450,48 @@ class Board:
         tKNum, tKLetter = targetKey
 
         moveVertically = tKLetter == sKLetter
-        moveHorizontally = tKLetter == sKLetter
+        moveHorizontally = tKNum == sKNum
 
         # Execute if the Rook is moving vertically 
         if moveVertically: 
 
             # Check if the Rook can move vertically 
             if self.__rookCanMoveVert(rook, numFrom=sKNum, numTo=tKNum, letter=sKLetter): 
-                targetIsEmpty = targetTile.pieceHolding == None 
+                pieceAtTarget = targetTile.pieceHolding != None 
                 
-                if targetIsEmpty: 
-                    targetTile.holdPiece(rook)
-                    self.activeTile.disposePiece()
-
-                else:  
+                # Execute if there is no piece at target / Move rook to target 
+                if pieceAtTarget: 
                     targetTile.disposePiece() 
-                    targetTile.holdPiece(rook)
-                    self.activeTile.disposePiece()
+
+                # Execute 
+                targetTile.holdPiece(rook)
+
+                # Dispose of the piece from activeTile    
+                self.activeTile.disposePiece()
             
         # Execute if the Rook is moving horizontally 
         if moveHorizontally: 
-
             pass 
 
     def __rookCanMoveVert(self, rook: Rook, numFrom=None, numTo=None, letter=None) -> bool: 
-        """ Check wether or not rook can move vertically. Returns True if it can """
+        """ Checks wether or not rook can move vertically. Returns True if it can """
 
+        # Execute so we traverse the numbers array properly / Very weird fix / Reimplement later 
+        nums = list() 
+        if numFrom < numTo: 
+            nums = [n for n in Number]
+        else: 
+            for num in Number: 
+                nums.insert(0, num)
+
+        i = len(nums) - 1 
         checkTile = False 
-        for num in Number: 
+        while i >= 0: 
+            num = nums[i]
             if checkTile: 
 
                 # Execute if a piece was found between the rows 
-                piece = self.boardMatrix[num][letter].pieceHolding
+                piece = self.boardMatrix[num.value][letter.value].pieceHolding
                 if piece is not None: 
                     
                     # Execute if the piece is at the target tile
@@ -498,7 +518,8 @@ class Board:
             if num is numTo: 
                 checkTile = False 
                 break 
-
+            
+            i -= 1
         return True 
             
     def __rookCanMoveHor(rook: Rook, colFrom=None, colTo=None, row=None) -> bool: 
@@ -507,25 +528,25 @@ class Board:
         pass 
 
     # Knight methods 
-    def __moveKnight(self, sourceTile, targetTile) -> bool: 
+    def __moveKnight(self, targetTile) -> bool: 
         """ Moves the Knight from source to target. Returns true if the move is legal """ 
 
         pass 
 
     # Bishop methods 
-    def __moveBishop(self, sourceTile, targetTile) -> bool: 
+    def __moveBishop(self, targetTile) -> bool: 
         """ Moves the Bishop from source to target. Returns true if the move is legal """ 
 
         pass 
 
     # Queen methods 
-    def __moveQueen(self, sourceTile, targetTile) -> bool: 
+    def __moveQueen(self, targetTile) -> bool: 
         """ Moves the Queen from source to target. Returns true if the move is legal """ 
 
         pass 
 
     # King methods 
-    def __moveKing(self, sourceTile, targetTile) -> bool: 
+    def __moveKing(self, targetTile) -> bool: 
         """ Moves the King from source to target. Returns true if the move is legal """ 
 
         pass 
