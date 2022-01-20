@@ -1,0 +1,42 @@
+{
+  "files": {
+    "ShooterDemo/GUI/File.py": [
+      {
+        "id": "4d0dc3e7-67f8-4fde-a82f-9c038a5150bb",
+        "line": 1,
+        "version": 34,
+        "index": 0
+      }
+    ],
+    "Tic Tac Toe /GUI.py": [
+      {
+        "id": "d436ad92-1178-4ae7-a135-8a7f9c9f8bc2",
+        "line": 35,
+        "version": 1,
+        "index": 963
+      }
+    ],
+    "_SpriteBodies/SpriteBodies.py": [
+      {
+        "id": "8d1ed5a3-6f57-414e-b7e3-67dc6a5756ba",
+        "line": 13,
+        "version": 955,
+        "index": 486
+      },
+      {
+        "id": "5523d800-2168-43f6-af4b-5eaf0387653e",
+        "line": 17,
+        "version": 955,
+        "index": 673
+      }
+    ],
+    "main.replit": [
+      {
+        "id": "329c57de-7e3c-43b1-8be9-b334739e2210",
+        "line": 1,
+        "version": 8,
+        "index": 0
+      }
+    ]
+  }
+}
