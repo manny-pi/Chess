@@ -45,6 +45,12 @@ class Letter(Enum):
     G = 6
     H = 7
 
+    def __lt__(self, other): 
+        return self.value < other.value 
+
+    def __gt__(self, other): 
+        return self.value > other.value 
+
     def __sub__(self, other):
         return self.value - other.value 
 
@@ -185,14 +191,6 @@ class Board:
 
         print(f'Active Tile: {self.activeTile}')
         
-    def __updateBoard(self): 
-        """ Adjust the locations of pieces on the board during the game """ 
-
-        if self.hasActiveTile: 
-            self.hasActiveTile = False 
-        else: 
-            self.hasActiveTile = True 
-
     def __generateTiles(self):
         """ Generates the tiles of the board """ 
 
@@ -327,10 +325,10 @@ class Board:
             self.__moveRook(targetTile) 
 
         elif isinstance(piece, Knight):
-            self.__moveRook(targetTile) 
+            self.__moveKnight(targetTile) 
 
         elif isinstance(piece, Bishop):
-            self.__moveRook(targetTile) 
+            self.__moveBishop(targetTile)(targetTile) 
 
         elif isinstance(piece, Queen): 
             self.__moveQueen(targetTile)
@@ -439,7 +437,7 @@ class Board:
 
     # Rook methods 
     def __moveRook(self, targetTile): 
-        """ Moves the Rook from source to target if possible """ 
+        """ Moves the Rook from activeTile to targetTile if possible """ 
 
         rook = self.activeTile.pieceHolding
 
@@ -470,24 +468,34 @@ class Board:
                 self.activeTile.disposePiece()
             
         # Execute if the Rook is moving horizontally 
-        if moveHorizontally: 
-            pass 
+        elif moveHorizontally: 
+            # Check if the Rook can move vertically 
+            if self.__rookCanMoveHor(rook, letterFrom=sKLetter, letterTo=tKLetter, num=sKNum): 
+                pieceAtTarget = targetTile.pieceHolding != None 
+                
+                # Execute if there is no piece at target / Move rook to target 
+                if pieceAtTarget: 
+                    targetTile.disposePiece() 
+
+                # Execute 
+                targetTile.holdPiece(rook)
+
+                # Dispose of the piece from activeTile    
+                self.activeTile.disposePiece()
 
     def __rookCanMoveVert(self, rook: Rook, numFrom=None, numTo=None, letter=None) -> bool: 
         """ Checks wether or not rook can move vertically. Returns True if it can """
 
         # Execute so we traverse the numbers array properly / Very weird fix / Reimplement later 
         nums = list() 
-        if numFrom < numTo: 
-            nums = [n for n in Number]
+        if numFrom > numTo: 
+            nums = [n for n in Number]  # Regular order: 1, 2, ...
         else: 
             for num in Number: 
-                nums.insert(0, num)
+                nums.insert(0, num)     # Reverse order: 8, 7, ...
 
-        i = len(nums) - 1 
         checkTile = False 
-        while i >= 0: 
-            num = nums[i]
+        for num in nums:
             if checkTile: 
 
                 # Execute if a piece was found between the rows 
@@ -514,42 +522,126 @@ class Board:
             if num is numFrom: 
                 checkTile = True 
 
-            # Execute if we've reached the targetTile 
+            # Execute if we've reached the targetTile / End iteration 
             if num is numTo: 
-                checkTile = False 
                 break 
             
-            i -= 1
         return True 
             
-    def __rookCanMoveHor(rook: Rook, colFrom=None, colTo=None, row=None) -> bool: 
+    def __rookCanMoveHor(self, rook: Rook, letterFrom=None, letterTo=None, num=None) -> bool: 
         """ Check wether or not rook can move horizontally. Returns True if it can """
-        
-        pass 
 
+        # Execute so we traverse the letters array properly / Very weird fix / Reimplement later 
+        letters = list() 
+        if letterFrom < letterTo: 
+            letters = [l for l in Letter]   # Normal array; A, B, ...
+        else: 
+            for l in Letter: 
+                letters.insert(0, l)      # Reverse array: H, G, ... 
+
+        checkTile = False 
+        for letter in letters: 
+            if checkTile: 
+                
+                # Execute if a piece was found between letterFrom and letterTo 
+                piece = self.boardMatrix[num.value][letter.value].pieceHolding
+                if piece is not None: 
+                    
+                    # Execute if the piece is at the target tile
+                    atTarget = letter is letterTo
+                    if atTarget: 
+
+                        # Execute if the piece is an enemy piece / Return True / Rook can move there 
+                        if piece.team is not rook.team: 
+                            return True 
+                        
+                        # Execute if the piece is the same team as the Rook / Rook can't move there 
+                        else: 
+                            return False
+
+                    # Execute if the piece is not at the target tile / The piece is before the target tile 
+                    else: 
+                        return False 
+
+            # Execute if we're past the letterFrom 
+            if letter is letterFrom: 
+                checkTile = True 
+
+            # Execute if we've reached the targetTile / End iteration 
+            if letter is letterTo: 
+                break 
+            
+        return True
+            
     # Knight methods 
-    def __moveKnight(self, targetTile) -> bool: 
-        """ Moves the Knight from source to target. Returns true if the move is legal """ 
+    def __moveKnight(self, targetTile): 
+        """ Move Knight from activeTile to targetTile if possible """ 
 
         pass 
 
     # Bishop methods 
-    def __moveBishop(self, targetTile) -> bool: 
-        """ Moves the Bishop from source to target. Returns true if the move is legal """ 
+    def __moveBishop(self, targetTile): 
+        """ Move Bishop from activeTile to targetTile if possible """ 
 
         pass 
 
+    def __bishopCanMove(self, bishop: Bishop, numFrom=None, numTo=None, letterFrom=None, letterTo=None) -> bool: 
+        """ Returns True if Bishop can move from activeTile to targetTile """ 
+        
+        vertMoves = numTo - numFrom
+        horMoves = letterTo - letterFrom
+        movingDiagonally = abs(vertMoves) == abs(horMoves)
+        if movingDiagonally: 
+
+            pass 
+            
+        
+        return False 
+        
     # Queen methods 
-    def __moveQueen(self, targetTile) -> bool: 
-        """ Moves the Queen from source to target. Returns true if the move is legal """ 
+    def __moveQueen(self, targetTile): 
+        """ Moves Queen from activeTile to targetTile if possible """ 
 
         pass 
+
+    def __moveKing(self, targetTile): 
+        """ Moves the King from activeTile to targetTile if possible """
+
+        king = self.activeTile.pieceHolding
+        if self.__kingCanMove(king, targetTile): 
+            pieceAtTarget = targetTile.pieceHolding is not None
+            if pieceAtTarget: 
+                targetTile.disposePiece() 
+            targetTile.holdPiece(king)
+            self.activeTile.disposePiece()
 
     # King methods 
-    def __moveKing(self, targetTile) -> bool: 
-        """ Moves the King from source to target. Returns true if the move is legal """ 
+    def __kingCanMove(self, king, targetTile) -> bool: 
+        """ Returns True if the King can move from the activeTile to the targetTile """ 
 
-        pass 
+        sourceKey = self.activeTile.key 
+        sKNum, sKLetter = sourceKey
+
+        targetKey = targetTile.key
+        tKNum, tKLetter = targetKey
+
+        singleStep = abs(tKNum - sKNum) <= 1 and abs(sKLetter - tKLetter) <= 1
+
+        # Execute if the King is taking a single step 
+        if singleStep: 
+
+            pieceAtTarget = targetTile.pieceHolding is not None 
+            if pieceAtTarget: 
+                enemyTeam = targetTile.pieceHolding.team is not king.team 
+                if enemyTeam: 
+                    return True
+                else: 
+                    return False 
+            else: 
+                return True 
+            pass 
+
+        return False 
 
     def __iter__(self):
         return self 
