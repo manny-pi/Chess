@@ -588,11 +588,11 @@ class Board:
     def __bishopCanMove(self, bishop: Bishop, numFrom=None, numTo=None, letterFrom=None, letterTo=None) -> bool: 
         """ Returns True if Bishop can move from activeTile to targetTile """ 
         
-        vertMoves = numTo - numFrom
-        horMoves = letterTo - letterFrom
-        movingDiagonally = abs(vertMoves) == abs(horMoves)
+        numVertMoves = numTo - numFrom
+        numHorMoves = letterTo - letterFrom
+        movingDiagonally = abs(numVertMoves) == abs(numHorMoves)
         if movingDiagonally: 
-
+            
             pass 
             
         
