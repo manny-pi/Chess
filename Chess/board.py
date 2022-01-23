@@ -583,9 +583,21 @@ class Board:
     def __moveBishop(self, targetTile): 
         """ Move Bishop from activeTile to targetTile if possible """ 
 
-        pass 
+        bishop = self.activeTile.pieceHolding
+        sourceKeyNum, sourceKeyLetter, targetKeyNum, targetKeyLetter = self.__breakUp(self.activeTile, targetTile)
 
-    def __bishopCanMove(self, bishop: Bishop, numFrom=None, numTo=None, letterFrom=None, letterTo=None) -> bool: 
+        # A bishop's move is legal if the number of moves vertically equals the number of moves horizontally 
+        validMove = abs(targetKeyLetter - sourceKeyLetter) == abs(targetKeyNum - sourceKeyNum) 
+
+        if validMove: 
+            rightUp = None
+            keys = list() 
+            for n in Number: 
+                for l in Letter: 
+                    
+                    pass 
+
+    def __bishopCanMove(self, bishop: Bishop, tiles: list, target: Tile) -> bool: 
         """ Returns True if Bishop can move from activeTile to targetTile """ 
         
         numVertMoves = numTo - numFrom
@@ -642,6 +654,18 @@ class Board:
             pass 
 
         return False 
+
+    # Used in determining if pieces can move 
+    def __breakUp(self, *tiles): 
+        """ Returns a tuple containing the Number and Letter for a key """
+
+        retVal = list() 
+        for tile in tiles: 
+            num, letter = tile.key
+            retVal.append(num)
+            retVal.append(letter)
+
+        return retVal 
 
     def __iter__(self):
         return self 
