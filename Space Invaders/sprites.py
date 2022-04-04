@@ -3,6 +3,8 @@ from pygame import Surface
 from pygame import image
 from pygame import transform 
 
+import pygame
+pygame.init()
 
 class BasicSprite(Sprite): 
 
@@ -28,9 +30,9 @@ class Spaceship(BasicSprite):
     def __init__(self): 
         super().__init__() 
 
-        self.image = image.load('spaceship.png').convert() 
-        self.image = transform.scale(self.image, (60, 60))
-
+        # self.image = image.load('./spaceship.png').convert() 
+        # self.image = transform.scale(self.image, (60, 60))
+        self.image = Surface((60, 60))
         self.rect  = self.image.get_rect(left=40)
 
     def moveUp(self):

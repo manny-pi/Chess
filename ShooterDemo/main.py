@@ -1,4 +1,4 @@
-import ShooterDemo.GUI.shooterGUI as s
+import GUI.shooterGUI as s
 
 def main(): 
   sh = s.ShooterGUI() 

@@ -328,14 +328,14 @@ class Board:
             self.__moveKnight(targetTile) 
 
         elif isinstance(piece, Bishop):
-            self.__moveBishop(targetTile)(targetTile) 
+            self.__moveBishop(targetTile)
 
         elif isinstance(piece, Queen): 
             self.__moveQueen(targetTile)
         
         elif isinstance(piece, King): 
             self.__moveKing(targetTile) 
-
+ 
     # Pawn methods 
     def __movePawn(self, targetTile): 
         """ Moves the Pawn from source to target if possible""" 
@@ -589,13 +589,6 @@ class Board:
         # A bishop's move is legal if the number of moves vertically equals the number of moves horizontally 
         validMove = abs(targetKeyLetter - sourceKeyLetter) == abs(targetKeyNum - sourceKeyNum) 
 
-        if validMove: 
-            rightUp = None
-            keys = list() 
-            for n in Number: 
-                for l in Letter: 
-                    
-                    pass 
 
     def __bishopCanMove(self, bishop: Bishop, tiles: list, target: Tile) -> bool: 
         """ Returns True if Bishop can move from activeTile to targetTile """ 

@@ -12,14 +12,13 @@ class BasicBlock(sprite.Sprite):
         self.x = x 
         self.y = y 
 
-        self.surface = Surface((50, 50))
+        self.surface = Surface((BasicBlock.BLOCK_WIDTH, BasicBlock.BLOCK_HEIGHT))
+        self.surface.fill(self.color)
+        
         self.rect = self.surface.get_rect(topleft=(x, y))
 
         self.speed = speed 
 
-        self.surface = Surface((BasicBlock.BLOCK_WIDTH, BasicBlock.BLOCK_HEIGHT))
-        self.surface.fill(self.color)
-    
     def bottom(self): 
         return self.y + 50
     
