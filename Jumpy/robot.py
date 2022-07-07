@@ -19,7 +19,7 @@ class Robot(Sprite):
         self.timeSinceJump = 0
     
         self.VELOCITY = -30
-        self.ACCEL = 1.1
+        self.ACCEL = 1.8
 
     def jump(self): 
         """

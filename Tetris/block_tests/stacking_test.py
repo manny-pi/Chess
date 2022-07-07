@@ -1,6 +1,9 @@
+from sys import path 
+path.append("/Users/Omani/Desktop/Personal/Education/Computer Science/Python/Python\
+Projects/PyGame-Projects/Tetris/blocks")
+
 import pygame 
 from pygame.sprite import Group, spritecollideany, groupcollide 
-
 from blockattributes import * 
 from iblock import IBlock
 from jblock import JBlock 
