@@ -10,3 +10,4 @@ class Atom(sprite.Sprite):
 
         self.color = color 
         self.speed = speed 
+
